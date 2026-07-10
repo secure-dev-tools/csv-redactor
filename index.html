@@ -10,133 +10,174 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Free CSV Redactor — Sanitize, Mask & Shuffle CSV Data Locally</title>
-<meta name="description" content="Anonymize, redact, and shuffle sensitive CSV columns completely in your browser. 100% private, client-side data masking tool for compliance with GDPR, HIPAA, and CCPA.">
+<title>Free Data Redactor — Sanitize, Mask & Shuffle Spreadsheets Locally</title>
+<meta name="description" content="Anonymize, redact, and shuffle sensitive columns completely in your browser. 100% private, client-side data masking tool for compliance with GDPR, HIPAA, and CCPA.">
 <meta name="keywords" content="csv redactor, anonymize csv, shuffle csv columns, client side data masking, free data sanitizer, scrub PII spreadsheet">
+<!-- Library Dependencies -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/parquetjs@0.1.1/dist/parquet.min.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0D0F0D;
-    --surface: #161915;
-    --surface-2: #1E221D;
-    --border: #2B2F29;
-    --text: #EDEAE2;
-    --muted: #8B9088;
-    --accent-bg: #FFB300;
-    --accent: #FFB300;
-    --accent-dim: #8C6200;
-    --teal: #0097FF;
-    --danger: #FF3D00;
-    --success: #00E676;
+    --bg: #0B0C10;
+    --bg-grad: radial-gradient(1200px 600px at 10% -10%, rgba(124,92,255,.14), transparent 60%),
+                radial-gradient(900px 500px at 100% 0%, rgba(0,209,178,.10), transparent 55%);
+    --surface: #14161C;
+    --surface-2: #1B1E26;
+    --surface-3: #21242E;
+    --border: #2A2D38;
+    --border-soft: #23252F;
+    --text: #F2F1F6;
+    --muted: #8D91A3;
+    --muted-2: #63677A;
+    --accent: #7C5CFF;
+    --accent-strong: #9A82FF;
+    --accent-contrast: #0B0C10;
+    --teal: #00D1B2;
+    --danger: #FF5C7A;
+    --success: #34E0A1;
     --mono: 'IBM Plex Mono', monospace;
     --sans: 'Inter', sans-serif;
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 18px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.35);
+    --shadow: 0 8px 24px -8px rgba(0,0,0,.5);
+    --shadow-lg: 0 20px 50px -12px rgba(0,0,0,.6);
   }
   body.light-theme {
-    --bg: #F6F4EC;
+    --bg: #F5F5F8;
+    --bg-grad: radial-gradient(1200px 600px at 10% -10%, rgba(124,92,255,.08), transparent 60%),
+                radial-gradient(900px 500px at 100% 0%, rgba(0,209,178,.08), transparent 55%);
     --surface: #FFFFFF;
-    --surface-2: #ECE8DA;
-    --border: #D8D3C2;
-    --text: #1B1C17;
-    --muted: #75776C;
-    --accent-bg: #FFB300;
-    --accent: #8C6200;
-    --accent-dim: #FFB300;
-    --teal: #0071BF;
-    --danger: #BF2D00;
-    --success: #008e36;
+    --surface-2: #F1F1F6;
+    --surface-3: #E8E8F0;
+    --border: #E1E1EA;
+    --border-soft: #EAEAF1;
+    --text: #14151A;
+    --muted: #6C6F80;
+    --muted-2: #9497A6;
+    --accent: #6A45FF;
+    --accent-strong: #5934F0;
+    --accent-contrast: #FFFFFF;
+    --teal: #00947F;
+    --danger: #D6335A;
+    --success: #0E9F6E;
+    --shadow-sm: 0 1px 2px rgba(20,20,30,.06);
+    --shadow: 0 8px 24px -10px rgba(20,20,30,.14);
+    --shadow-lg: 0 20px 50px -16px rgba(20,20,30,.2);
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--bg);
+    background: var(--bg-grad), var(--bg);
+    background-attachment: fixed;
     color: var(--text);
     font-family: var(--sans);
     -webkit-font-smoothing: antialiased;
-    transition: background .2s ease, color .2s ease;
+    transition: background-color .2s ease, color .2s ease;
   }
-  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 48px 24px 90px; }
+  ::selection { background: color-mix(in srgb, var(--accent) 35%, transparent); }
 
-  header { margin-bottom: 36px; }
-  .eyebrow {
+  /* ---------- Header ---------- */
+  header { margin-bottom: 40px; }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-sm);
+    flex: none;
+  }
+  .brand-mark svg { width: 18px; height: 18px; color: #fff; }
+  .brand-name { font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .02em; }
+  .brand-name .dim { color: var(--muted); font-weight: 500; }
+
+  .theme-toggle {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 7px;
     font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.14em;
+    font-size: 11px;
+    letter-spacing: .04em;
     text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
-  }
-  h1 {
-    font-family: var(--mono);
-    font-size: 34px;
-    font-weight: 600;
-    margin: 0 0 12px;
-    letter-spacing: -0.01em;
-  }
-  header p {
+    background: var(--surface);
     color: var(--muted);
-    font-size: 15px;
-    line-height: 1.6;
-    max-width: 560px;
-    margin: 0 0 18px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: color .15s, border-color .15s, background .15s;
   }
-  .badge-container { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+  .theme-toggle:hover { color: var(--text); border-color: var(--accent); }
+  .theme-toggle svg { width: 13px; height: 13px; flex: none; }
+
+  h1 {
+    font-family: var(--sans);
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+    background: linear-gradient(135deg, var(--text), var(--muted));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header p { color: var(--muted); font-size: 15px; line-height: 1.65; max-width: 580px; margin: 0 0 20px; }
+
+  .badge-container { display: flex; gap: 10px; flex-wrap: wrap; }
   .badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 11.5px;
     color: var(--text);
     background: var(--surface);
     border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    padding: 9px 14px;
+    border-radius: 999px;
+    padding: 8px 14px 8px 12px;
+    box-shadow: var(--shadow-sm);
   }
-  .badge .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; flex: none; }
-  .badge.secure-badge { border-left-color: var(--success); }
-  .badge.secure-badge .dot { background: var(--success); }
+  .badge .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; flex: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
+  .badge.secure-badge .dot { background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 20%, transparent); }
 
-  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-  .theme-toggle {
-    flex: none;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    background: var(--surface);
-    color: var(--muted);
-    border: 1px solid var(--border);
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-  .theme-toggle:hover { color: var(--text); border-color: var(--muted); }
-  .theme-toggle svg { width: 13px; height: 13px; flex: none; }
-
+  /* ---------- Dropzone ---------- */
   .dropzone {
-    border: 1px dashed var(--border);
+    border: 1.5px dashed var(--border);
     background: var(--surface);
-    padding: 44px 24px;
+    border-radius: var(--radius-lg);
+    padding: 56px 24px;
     text-align: center;
     cursor: pointer;
-    transition: border-color .15s, background .15s;
+    transition: border-color .15s, background .15s, transform .15s;
+    box-shadow: var(--shadow-sm);
   }
-  .dropzone.drag { border-color: var(--accent); background: var(--surface-2); }
-  .dropzone .icon { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 10px; letter-spacing: .1em; text-transform: uppercase; }
-  .dropzone strong { font-size: 15px; display: block; margin-bottom: 6px; }
+  .dropzone:hover { border-color: var(--accent-strong); transform: translateY(-1px); }
+  .dropzone.drag { border-color: var(--accent); background: var(--surface-2); transform: scale(1.005); }
+  .dropzone .dz-icon {
+    width: 46px; height: 46px; margin: 0 auto 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, transparent), color-mix(in srgb, var(--teal) 18%, transparent));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dropzone .dz-icon svg { width: 22px; height: 22px; color: var(--accent-strong); }
+  .dropzone strong { font-size: 15.5px; display: block; margin-bottom: 6px; }
   .dropzone span { color: var(--muted); font-size: 13px; }
   input[type=file] { display: none; }
 
-  section { margin-top: 44px; }
+  /* ---------- Sections ---------- */
+  section { margin-top: 40px; }
   .section-title {
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 11.5px;
     text-transform: uppercase;
-    letter-spacing: .12em;
+    letter-spacing: .1em;
     color: var(--muted);
     margin-bottom: 14px;
     display: flex;
@@ -145,289 +186,429 @@
   }
   .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
+  .workspace-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    padding: 8px 13px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color .15s, background .15s, color .15s, transform .1s;
+  }
+  .btn:hover { border-color: var(--muted-2); background: var(--surface-2); }
+  .btn:active { transform: scale(.97); }
+  .btn.btn-accent { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+  .btn.btn-accent:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+  .btn.btn-danger:hover { border-color: var(--danger); color: var(--danger); }
+  .btn.btn-sm { padding: 6px 10px; font-size: 11px; }
+
   .macro-bar {
     background: var(--surface);
     border: 1px solid var(--border);
-    padding: 10px 16px;
+    border-radius: var(--radius);
+    padding: 10px 14px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     margin-bottom: 14px;
     flex-wrap: wrap;
+    box-shadow: var(--shadow-sm);
   }
-  .macro-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; }
+  .macro-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
   .macro-btn {
     background: var(--surface-2);
     border: 1px solid var(--border);
+    border-radius: 999px;
     color: var(--text);
     font-family: var(--mono);
     font-size: 11px;
-    padding: 4px 10px;
+    font-weight: 600;
+    padding: 6px 13px;
     cursor: pointer;
+    transition: border-color .15s, color .15s, background .15s;
   }
-  .macro-btn:hover { border-color: var(--muted); color: var(--accent); }
+  .macro-btn:hover { border-color: var(--accent); color: var(--accent-strong); }
 
-  .grid-action-bar {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-  }
-  .grid-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 11px;
-    padding: 6px 12px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 500;
-  }
-  .grid-btn:hover {
+  .grid-action-bar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+
+  /* ---------- Row gutter (numbers / hover-delete) ---------- */
+  .row-gutter-head {
+    width: 34px;
+    min-width: 34px;
     background: var(--surface-2);
-    border-color: var(--muted);
   }
-  .grid-btn.danger-btn:hover {
-    border-color: var(--danger);
-    color: var(--danger);
+  td.row-gutter {
+    width: 34px;
+    min-width: 34px;
+    max-width: 34px;
+    padding: 0 !important;
+    text-align: center;
+    color: var(--muted-2);
+    font-size: 11px;
+    background: color-mix(in srgb, var(--surface-2) 60%, transparent);
+    border-right: 1px solid var(--border-soft);
+    position: relative;
+    cursor: default;
+    user-select: none;
   }
+  td.row-gutter .row-num,
+  td.row-gutter .row-del-btn {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  td.row-gutter .row-del-btn {
+    opacity: 0;
+    background: transparent;
+    border: none;
+    color: var(--muted-2);
+    cursor: pointer;
+    transition: opacity .12s, color .12s, background .12s;
+  }
+  tbody tr:hover td.row-gutter .row-num { opacity: 0; }
+  tbody tr:hover td.row-gutter .row-del-btn { opacity: 1; }
+  td.row-gutter .row-del-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 16%, transparent); }
+  td.row-gutter .row-del-btn svg { width: 12px; height: 12px; pointer-events: none; }
 
-  .col-grid { display: flex; flex-direction: column; border: 1px solid var(--border); }
+  tr.add-row-ghost td {
+    border-bottom: none;
+    border-top: 1px dashed var(--border);
+    padding: 9px 12px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background: transparent;
+    transition: color .12s, background .12s;
+  }
+  tr.add-row-ghost:hover td { color: var(--teal); background: color-mix(in srgb, var(--teal) 7%, transparent); }
+  tr.add-row-ghost .add-row-label { display: inline-flex; align-items: center; gap: 6px; }
+  tr.add-row-ghost .add-row-label svg { width: 12px; height: 12px; }
+
+  /* ---------- Column config rows ---------- */
+  .col-grid { display: flex; flex-direction: column; gap: 8px; }
   .col-row {
     display: grid;
-    grid-template-columns: 1fr 1fr 170px;
+    grid-template-columns: 1fr 1fr 180px;
     gap: 16px;
     align-items: center;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
+    padding: 13px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    transition: border-color .15s;
   }
-  .col-row:last-child { border-bottom: none; }
-  .col-name { font-family: var(--mono); font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; overflow: hidden; text-overflow: ellipsis; }
+  .col-row:hover { border-color: var(--muted-2); }
+  .col-name { font-family: var(--mono); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .type-tag {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 9.5px;
     text-transform: uppercase;
     letter-spacing: .06em;
-    padding: 2px 6px;
+    padding: 3px 7px;
+    border-radius: 999px;
     border: 1px solid var(--border);
     color: var(--muted);
-    font-weight: 500;
+    font-weight: 600;
     flex-shrink: 0;
   }
-  .type-tag.detected { color: var(--accent); border-color: var(--accent-dim); }
+  .type-tag.detected { color: var(--accent-strong); border-color: color-mix(in srgb, var(--accent) 40%, transparent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
   .col-sample { font-family: var(--mono); font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
   select {
     width: 100%;
     background: var(--surface-2);
     color: var(--text);
     border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
     font-family: var(--mono);
-    font-size: 12.5px;
-    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 9px 10px;
     cursor: pointer;
+    transition: border-color .15s;
   }
+  select:hover { border-color: var(--muted-2); }
   select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-  option[value=keep] { color: var(--muted); }
+  option[value=keep] { color: inherit; }
   option[value=anonymize] { color: var(--teal); }
   option[value=shuffle] { color: var(--accent); }
   option[value=redact] { color: var(--danger); }
 
-  .table-scroll { border: 1px solid var(--border); overflow: auto; max-height: 360px; position: relative; }
+  /* ---------- Table ---------- */
+  .table-scroll {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: auto;
+    max-height: 380px;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+  }
+  .table-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+  .table-scroll::-webkit-scrollbar-track { background: transparent; }
+  .table-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; border: 2px solid var(--surface); }
+  .table-scroll::-webkit-scrollbar-thumb:hover { background: var(--muted-2); }
+
   table { border-collapse: collapse; width: 100%; font-family: var(--mono); font-size: 12.5px; }
-  
+
   thead th {
     position: sticky; top: 0;
     background: var(--surface-2);
+    backdrop-filter: blur(6px);
     text-align: left;
-    padding: 9px 12px;
+    padding: 0;
     border-bottom: 1px solid var(--border);
     font-weight: 600;
     white-space: nowrap;
     z-index: 2;
-    cursor: grab;
     user-select: none;
-    transition: background-color 0.15s ease;
+    transition: background-color .15s ease;
   }
-  thead th:active { cursor: grabbing; }
-  thead th.drag-over { background-color: var(--surface); border-left: 2px dashed var(--teal); }
-  thead th.dragging { opacity: 0.4; }
+  thead th.drag-over { background-color: color-mix(in srgb, var(--teal) 14%, var(--surface-2)); box-shadow: inset 2px 0 0 var(--teal); }
+  thead th.dragging { background: color-mix(in srgb, var(--accent) 16%, var(--surface-2)); box-shadow: inset 0 0 0 1px var(--accent); }
+  thead th.dragging .drag-handle { color: var(--accent-strong); }
 
-  .th-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    position: relative;
-    pointer-events: none;
+  /* ---------- Confirm modal ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(6, 7, 10, .55);
+    backdrop-filter: blur(2px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    animation: overlay-in .15s ease;
   }
-  .th-wrap * { pointer-events: auto; }
+  @keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
+  .modal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    padding: 22px;
+    width: 100%;
+    max-width: 360px;
+    animation: modal-in .16s cubic-bezier(.22,.9,.32,1);
+  }
+  @keyframes modal-in { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .modal-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: color-mix(in srgb, var(--danger) 16%, transparent);
+    color: var(--danger);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .modal-icon svg { width: 18px; height: 18px; }
+  .modal-title { font-family: var(--sans); font-weight: 700; font-size: 16px; margin: 0 0 8px; }
+  .modal-body { font-size: 13.5px; color: var(--muted); line-height: 1.55; margin: 0 0 20px; }
+  .modal-body strong { color: var(--text); }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+  .btn-modal-cancel {
+    font-family: var(--mono); font-size: 12.5px; font-weight: 600;
+    padding: 9px 16px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+    cursor: pointer; transition: border-color .15s, background .15s;
+  }
+  .btn-modal-cancel:hover { border-color: var(--muted-2); }
+  .btn-modal-delete {
+    font-family: var(--mono); font-size: 12.5px; font-weight: 700;
+    padding: 9px 16px; border-radius: var(--radius-sm);
+    border: none; background: var(--danger); color: #fff;
+    cursor: pointer; transition: filter .15s;
+  }
+  .btn-modal-delete:hover { filter: brightness(1.08); }
+
+  .th-wrap { display: flex; align-items: center; gap: 4px; padding: 8px 6px 8px 6px; }
+
+  .drag-handle {
+    flex: none;
+    display: flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px;
+    border-radius: 5px;
+    color: var(--muted-2);
+    cursor: grab;
+    transition: color .15s, background .15s;
+  }
+  .drag-handle:hover { color: var(--accent-strong); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .drag-handle:active { cursor: grabbing; }
+  .drag-handle svg { width: 12px; height: 12px; pointer-events: none; }
 
   .header-text-span {
     flex: 1;
     display: inline-block;
-    min-width: 40px;
-    margin-right: 8px;
+    min-width: 44px;
+    border-radius: 5px;
+    padding: 2px 4px;
+    margin: -2px -4px;
   }
+  .header-text-span:hover { background: color-mix(in srgb, var(--muted-2) 12%, transparent); }
   .header-text-span:focus {
     outline: 2px solid var(--teal);
     background: var(--surface);
-    padding: 2px 4px;
-  }
-  
-  .col-trash-btn {
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 12px;
-    padding: 2px 5px;
-    display: inline-flex;
-    align-items: center;
-    border-radius: 4px;
-    transition: color 0.15s, background 0.15s;
-    margin-right: 4px;
-  }
-  .col-trash-btn:hover {
-    color: var(--danger);
-    background: rgba(255, 61, 0, 0.15);
   }
 
-  .col-insert-hitbox {
-    position: absolute;
-    right: -20px;
-    top: -9px;
-    bottom: -9px;
-    width: 16px;
-    z-index: 10;
+  .th-controls {
+    flex: none;
     display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .col-trash-btn {
+    flex: none;
+    background: transparent;
+    border: none;
+    color: var(--muted-2);
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    transition: color 0.15s, background 0.15s, opacity .15s;
+    opacity: 0;
+  }
+  thead th:hover .col-trash-btn,
+  thead th:focus-within .col-trash-btn { opacity: 1; }
+  .col-trash-btn svg { width: 12px; height: 12px; pointer-events: none; }
+  .col-trash-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 14%, transparent); }
+
+  .col-insert-btn {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--muted-2);
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     opacity: 0;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.15s ease, color .15s, background .15s;
   }
-  .col-insert-hitbox:hover {
-    opacity: 1;
-  }
-  .col-insert-hitbox::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 7px;
-    width: 2px;
-    background: var(--teal);
-    opacity: 0;
-    transition: opacity 0.15s ease;
-    pointer-events: none;
-  }
-  .col-insert-hitbox:hover::before {
-    opacity: 0.4;
-  }
-  .col-insert-circle {
-    width: 20px;
-    height: 20px;
-    background: var(--teal);
-    color: #ffffff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: bold;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    transition: transform 0.1s ease, background-color 0.1s ease;
-    z-index: 11;
-  }
-  .col-insert-circle:hover {
-    transform: scale(1.25);
-    background: var(--accent-bg);
-    color: #000000;
-  }
+  thead th:hover .col-insert-btn,
+  thead th:focus-within .col-insert-btn { opacity: 1; }
+  .col-insert-btn svg { width: 13px; height: 13px; pointer-events: none; }
+  .col-insert-btn:hover { color: var(--teal); background: color-mix(in srgb, var(--teal) 16%, transparent); }
 
   tbody td {
     padding: 8px 12px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-soft);
     white-space: nowrap;
     max-width: 220px;
     overflow: hidden;
     text-overflow: ellipsis;
+    border-radius: 4px;
   }
+  tbody td[contenteditable="true"]:hover { background: color-mix(in srgb, var(--muted-2) 8%, transparent); }
   tbody td[contenteditable="true"]:focus {
     outline: 2px solid var(--accent);
+    outline-offset: -2px;
     background: var(--surface-2) !important;
     overflow: visible;
     max-width: none;
   }
-  tbody tr:nth-child(odd) { background: var(--surface); }
-    
-  .cell-redact { 
-    background: repeating-linear-gradient(45deg, #2b120c 0 4px, #421b12 4px 8px); 
+  tbody tr:nth-child(odd) { background: color-mix(in srgb, var(--surface-2) 55%, transparent); }
+  tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+
+  .cell-redact {
+    background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--danger) 16%, transparent) 0 4px, color-mix(in srgb, var(--danger) 24%, transparent) 4px 8px);
     color: var(--danger);
-    font-weight: bold;
+    font-weight: 700;
   }
-  body.light-theme .cell-redact {
-    background: repeating-linear-gradient(45deg, #fcdbd3 0 4px, #fad0c6 4px 8px);
-  }
+  .cell-shuffle { color: var(--accent-strong); font-weight: 600; }
+  .cell-anon { color: var(--teal); font-weight: 600; }
 
-  .cell-shuffle { color: var(--accent); }
-  .cell-anon { color: var(--teal); }
-
+  /* ---------- Actions / footer ---------- */
   .actions {
-    margin-top: 28px;
+    margin-top: 26px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     flex-wrap: wrap;
   }
+  .download-container {
+    display: inline-flex;
+    align-items: stretch;
+    box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--accent) 60%, transparent);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
   button.primary {
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: .02em;
-    background: var(--accent-bg);
-    color: #141405;
+    font-family: var(--sans);
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: .01em;
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    color: var(--accent-contrast);
     border: none;
-    padding: 13px 22px;
+    padding: 13px 20px;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: filter .15s, transform .1s;
+    display: inline-flex; align-items: center; gap: 8px;
+    border-right: 1px solid rgba(255,255,255,0.15);
   }
-  button.primary:hover { background: #ffc433; }
-  button.primary:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
-  button.secondary {
+  .download-select {
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    color: var(--accent-contrast);
+    border: none;
     font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 600;
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border);
-    padding: 12px 20px;
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 0 14px;
     cursor: pointer;
+    width: auto;
+    border-radius: 0;
+    transition: filter .15s;
   }
-  button.secondary:hover { border-color: var(--muted); }
-  .row-count { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+  button.primary:hover, .download-select:hover { filter: brightness(1.08); }
+  button.primary:disabled, .download-select:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; box-shadow: none; filter: none; }
+  .row-count { font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin-left: 8px;}
 
   .hidden { display: none !important; }
 
+  /* ---------- Toast ---------- */
+  #toastHost { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 999; max-width: 340px; }
+  .toast {
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text);
+    box-shadow: var(--shadow-lg);
+    animation: toast-in .18s ease;
+  }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ---------- SEO content ---------- */
   .seo-content {
     margin-top: 80px;
     border-top: 1px solid var(--border);
     padding-top: 40px;
-    line-height: 1.6;
+    line-height: 1.65;
   }
-  .seo-content h2 { font-family: var(--mono); font-size: 20px; color: var(--text); margin-top: 30px; }
-  .seo-content h3 { font-family: var(--mono); font-size: 16px; color: var(--accent); margin-top: 20px; }
+  .seo-content h2 { font-family: var(--sans); font-weight: 800; font-size: 21px; color: var(--text); margin-top: 30px; letter-spacing: -.01em; }
+  .seo-content h3 { font-family: var(--mono); font-size: 15px; color: var(--accent-strong); margin-top: 20px; }
   .seo-content p, .seo-content li { color: var(--muted); font-size: 14.5px; }
   .seo-content ul { padding-left: 20px; }
   .seo-content li { margin-bottom: 8px; }
-  .faq-block { margin-bottom: 20px; }
+  .faq-block { margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
 
   @media (max-width: 640px) {
     .col-row { grid-template-columns: 1fr; gap: 8px; }
+    h1 { font-size: 28px; }
   }
 </style>
 </head>
@@ -436,20 +617,27 @@
 
   <header>
     <div class="header-top">
-      <div class="eyebrow" id="statusEyebrow">Data Sanitization / Client-Side</div>
+      <div class="brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
+        </div>
+        <div class="brand-name">Data Sanitizer <span class="dim" id="statusEyebrow">/ Client-Side</span></div>
+      </div>
       <button class="theme-toggle" id="themeToggle"></button>
     </div>
-    <h1>CSV Redactor</h1>
-    <p>Upload a real CSV, choose what happens to each column, download a sanitized copy. Structure and row count stay intact — only what you flag gets masked.</p>
-     
+    <h1>Sanitize your Data, without leaving your browser</h1>
+    <p>Upload a CSV, configure actions row-by-row, and extract beautifully redacted structural copies into complex backend ecosystem files effortlessly.</p>
+
     <div class="badge-container">
       <div class="badge"><span class="dot"></span>Zero servers — processing stays localized</div>
-      <div class="badge secure-badge"><span class="dot"></span>⚡ Offline-Capable Memory Sandbox</div>
+      <div class="badge secure-badge"><span class="dot"></span>Offline-capable memory sandbox</div>
     </div>
   </header>
 
   <div class="dropzone" id="dropzone">
-    <div class="icon">Step 1</div>
+    <div class="dz-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>
+    </div>
     <strong>Drop a CSV file here, or click to browse</strong>
     <span id="dzSub">.csv files only — parsing happens locally</span>
     <input type="file" id="fileInput" accept=".csv">
@@ -457,20 +645,20 @@
 
   <div id="workspace" class="hidden">
     <section>
-      <div class="section-title">
-        Column actions
-        <div style="margin-left: auto; display: flex; gap: 8px;">
-          <button class="secondary" id="clearFileBtn" style="padding: 5px 12px; font-size: 11px;">Clear File</button>
-          <button class="primary" id="resetBtn" style="padding: 5px 12px; font-size: 11px;">Reset to suggestions</button>
+      <div class="workspace-head">
+        <div class="section-title" style="margin-bottom:0;">Column actions</div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-sm" id="clearFileBtn">Clear file</button>
+          <button class="btn btn-sm btn-accent" id="resetBtn">Reset to suggestions</button>
         </div>
       </div>
 
       <div class="macro-bar">
-        <span class="macro-label">Bulk Action Override:</span>
-        <button class="macro-btn" data-action="keep">Keep All</button>
-        <button class="macro-btn" data-action="anonymize">Anonymize All</button>
-        <button class="macro-btn" data-action="shuffle">Shuffle All</button>
-        <button class="macro-btn" data-action="redact">Redact All</button>
+        <span class="macro-label">Bulk override:</span>
+        <button class="macro-btn" data-action="keep">Keep all</button>
+        <button class="macro-btn" data-action="anonymize">Anonymize all</button>
+        <button class="macro-btn" data-action="shuffle">Shuffle all</button>
+        <button class="macro-btn" data-action="redact">Redact all</button>
       </div>
 
       <div class="col-grid" id="colGrid"></div>
@@ -478,51 +666,71 @@
 
     <section>
       <div class="section-title">Live preview <span id="previewCount" style="text-transform:none;letter-spacing:0;"></span></div>
-      
-      <div class="grid-action-bar">
-        <button class="grid-btn" onclick="gridAddRow()">➕ Add Row</button>
-        <button class="grid-btn danger-btn" onclick="gridDeleteRow()">❌ Remove Last Row</button>
-        <button class="grid-btn" onclick="gridAddColumnEnd()">➕ Append Column to End</button>
-      </div>
 
       <div class="table-scroll"><table id="previewTable"></table></div>
     </section>
 
     <div class="actions">
-      <button class="primary" id="downloadBtn">Download sanitized CSV</button>
+      <div class="download-container">
+        <button class="primary" id="downloadBtn">Download Sanitized Data</button>
+        <select class="download-select" id="formatSelect">
+          <option value="csv">.CSV</option>
+          <option value="xlsx">.EXCEL (XLSX)</option>
+          <option value="json">.JSON</option>
+          <option value="sql">.SQL (Insert)</option>
+          <option value="parquet">.PARQUET</option>
+        </select>
+      </div>
       <span class="row-count" id="fullRowCount"></span>
     </div>
   </div>
 
   <article class="seo-content">
-    <h2>Secure, Browser-Based CSV Data Masking & Anonymization</h2>
-    <p>When working with customer analytics, AI development pipelines, or software testing environments, handling Personally Identifiable Information (PII) safely is critical. This open-source, client-side <strong>CSV Redactor</strong> helps developers, compliance officers, and data scientists safely strip away sensitive fields before sharing reports or loading logs into large language models (LLMs).</p>
+    <h2>Secure, Browser-Based Data Masking &amp; Multi-Format Exporter</h2>
+    <p>When working with customer analytics, AI development pipelines, or software testing environments, handling Personally Identifiable Information (PII) safely is critical. This open-source, client-side application helps developers, compliance officers, and data scientists safely strip away sensitive fields before sharing reports or loading logs into storage formats.</p>
 
     <h3>Supported Data Manipulation Strategies</h3>
     <ul>
-      <li><strong>Redact (Data Masking):</strong> Replaces cell text entirely with intelligent block masking elements. Emails retain structural syntax domains (e.g., <code>████@domain.com</code>) to preserve visual application interface metrics.</li>
-      <li><strong>Anonymize (Pseudo-anonymization):</strong> Replaces raw inputs with matching pseudo-identities (like <code>user001@example.com</code> or <code>Value_001</code>). Identical raw values map across rows systematically to keep table logic accurate.</li>
-      <li><strong>Shuffle Data (Random Row Mixing):</strong> Breaks horizontal link correlations across sensitive data types by shuffling row positioning vertically inside a singular column.</li>
-      <li><strong>Keep As-Is:</strong> Preserves raw column configurations natively.</li>
+      <li><strong>Redact (Data Masking):</strong> Replaces cell text entirely with block masking. Emails retain their domain (e.g., <code>████@domain.com</code>) so downstream formats still validate.</li>
+      <li><strong>Anonymize (Pseudo-anonymization):</strong> Replaces raw inputs with matching pseudo-identities (like <code>user001@example.com</code> or <code>Value_001</code>). Identical raw values map consistently across rows.</li>
+      <li><strong>Shuffle (Row Mixing):</strong> Breaks horizontal correlations across sensitive data by shuffling row order within a single column.</li>
+      <li><strong>Keep As-Is:</strong> Preserves the column exactly as uploaded.</li>
     </ul>
 
     <h2>Frequently Asked Questions (FAQ)</h2>
     <div class="faq-block">
       <h3>Is it secure to upload corporate files to this tool?</h3>
-      <p>This application is static and operates entirely within client-side memory using your browser's local sandbox architecture. Your files are parsed directly inside your device memory stream using HTML5 file handles and are never transmitted over network protocols to a remote web server.</p>
+      <p>This application is static and operates entirely within client-side memory using your browser's local sandbox. Your file is parsed directly in your device's memory using HTML5 file handles and is never transmitted to a remote server.</p>
     </div>
   </article>
 
 </div>
 
+<div id="toastHost"></div>
+
+<div id="deleteModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>
+    </div>
+    <p class="modal-title">Delete this column?</p>
+    <p class="modal-body">Remove <strong id="deleteModalColName"></strong> and its data from every row. You can't undo this.</p>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" id="deleteModalCancel">Cancel</button>
+      <button class="btn-modal-delete" id="deleteModalConfirm">Delete</button>
+    </div>
+  </div>
+</div>
+
 <script>
-let rawRows = [];
-let headers = [];
-let columnActions = {};
-let columnTypes = {};
-let originalFileName = 'data_sanitized.csv';
-let sessionShuffledIndices = {};
-let dragSourceIndex = null;
+let columns = [];          
+let rawRows = [];          
+let originalFileNameBase = 'data_sanitized';
+let sessionShuffledIndices = {}; 
+let dragSourceColId = null;   
+let colIdCounter = 0;
+
+function nextColId(){ colIdCounter += 1; return 'c' + colIdCounter; }
 
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
@@ -532,21 +740,57 @@ const previewTable = document.getElementById('previewTable');
 const previewCount = document.getElementById('previewCount');
 const fullRowCount = document.getElementById('fullRowCount');
 const downloadBtn = document.getElementById('downloadBtn');
+const formatSelect = document.getElementById('formatSelect');
 const resetBtn = document.getElementById('resetBtn');
 const clearFileBtn = document.getElementById('clearFileBtn');
 const themeToggle = document.getElementById('themeToggle');
 const statusEyebrow = document.getElementById('statusEyebrow');
+const toastHost = document.getElementById('toastHost');
 
-const SUN_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
-const MOON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+function showToast(message){
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = message;
+  toastHost.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .25s'; setTimeout(() => el.remove(), 250); }, 3800);
+}
+
+const deleteModal = document.getElementById('deleteModal');
+const deleteModalColName = document.getElementById('deleteModalColName');
+const deleteModalCancel = document.getElementById('deleteModalCancel');
+const deleteModalConfirm = document.getElementById('deleteModalConfirm');
+let pendingDeleteColId = null;
+
+function requestDeleteColumn(colId){
+  const col = getColumn(colId);
+  if (!col) return;
+  pendingDeleteColId = colId;
+  deleteModalColName.textContent = `"${col.name}"`;
+  deleteModal.classList.remove('hidden');
+  deleteModalConfirm.focus();
+}
+function closeDeleteModal(){
+  deleteModal.classList.add('hidden');
+  pendingDeleteColId = null;
+}
+deleteModalCancel.addEventListener('click', closeDeleteModal);
+deleteModal.addEventListener('click', e => { if (e.target === deleteModal) closeDeleteModal(); });
+deleteModalConfirm.addEventListener('click', () => {
+  if (pendingDeleteColId) deleteSpecificColumn(pendingDeleteColId);
+  closeDeleteModal();
+});
+
+const SUN_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const MOON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+const GRIP_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="6" r="1.6"/><circle cx="8" cy="12" r="1.6"/><circle cx="8" cy="18" r="1.6"/><circle cx="16" cy="6" r="1.6"/><circle cx="16" cy="12" r="1.6"/><circle cx="16" cy="18" r="1.6"/></svg>';
+const TRASH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>';
+const PLUS_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>';
 
 function setTheme(isLight){
   document.body.classList.toggle('light-theme', isLight);
-  themeToggle.innerHTML = (isLight ? SUN_ICON : MOON_ICON) + ` <span id="themeLabel" style="margin-left:6px;">${isLight ? 'Light' : 'Dark'}</span>`;
+  themeToggle.innerHTML = (isLight ? SUN_ICON : MOON_ICON) + ` <span style="margin-left:4px;">${isLight ? 'Light' : 'Dark'}</span>`;
 }
-themeToggle.addEventListener('click', () => {
-  setTheme(!document.body.classList.contains('light-theme'));
-});
+themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('light-theme')));
 setTheme(false);
 
 const TYPE_ACTION = { email: 'anonymize', name: 'anonymize', phone: 'redact', id: 'redact', generic: 'keep' };
@@ -585,7 +829,7 @@ fileInput.addEventListener('change', e => {
 });
 
 function handleFile(file){
-  originalFileName = file.name.replace(/\.csv$/i, '') + '_sanitized.csv';
+  originalFileNameBase = file.name.replace(/\.csv$/i, '') + '_sanitized';
   const reader = new FileReader();
   reader.onload = e => parseCSV(e.target.result);
   reader.readAsText(file, 'UTF-8');
@@ -593,64 +837,73 @@ function handleFile(file){
 
 function parseCSV(text){
   const result = Papa.parse(text, { header: true, skipEmptyLines: true });
-  rawRows = result.data;
-  headers = result.meta.fields || [];
-  
-  columnActions = {};
-  columnTypes = {};
-  sessionShuffledIndices = {};
+  const parsedRows = result.data;
+  const parsedHeaders = result.meta.fields || [];
 
-  if(rawRows.length === 0) {
-    alert("The uploaded CSV appears to be completely empty.");
+  if (parsedRows.length === 0) {
+    showToast('The uploaded CSV appears to be completely empty.');
     return;
   }
 
-  headers.forEach(h => {
-    const samples = rawRows.slice(0, 20).map(r => r[h]);
+  colIdCounter = 0;
+  columns = [];
+  sessionShuffledIndices = {};
+
+  const nameToId = {};
+  parsedHeaders.forEach(h => {
+    const id = nextColId();
+    nameToId[h] = id;
+    const samples = parsedRows.slice(0, 20).map(r => r[h]);
     const type = detectColumnType(h, samples);
-    columnTypes[h] = type;
-    columnActions[h] = TYPE_ACTION[type];
+    columns.push({ id, name: h, type, action: TYPE_ACTION[type] });
+  });
+
+  rawRows = parsedRows.map(row => {
+    const newRow = {};
+    parsedHeaders.forEach(h => { newRow[nameToId[h]] = row[h]; });
+    return newRow;
   });
 
   updateRowCountsUI();
   buildColumnGrid();
   renderPreview();
-  
+
   dropzone.classList.add('hidden');
   workspace.classList.remove('hidden');
 }
 
 function updateRowCountsUI() {
-  const delim = 'comma'; 
-  statusEyebrow.textContent = `Data Sanitization / ${rawRows.length} rows / ${delim}-delimited`;
+  statusEyebrow.textContent = `/ ${rawRows.length} rows / local sandbox`;
   fullRowCount.textContent = `${rawRows.length} rows total`;
 }
 
+function getColumn(id){ return columns.find(c => c.id === id); }
+
 function buildColumnGrid(){
   colGrid.innerHTML = '';
-  headers.forEach(h => {
-    const sample = rawRows[0] ? rawRows[0][h] : '';
-    const type = columnTypes[h] || 'generic';
-    const tagHtml = type === 'generic' ? '' : `<span class="type-tag detected">${type}</span>`;
+  columns.forEach(col => {
+    const sample = rawRows[0] ? rawRows[0][col.id] : '';
+    const tagHtml = col.type === 'generic' ? '' : `<span class="type-tag detected">${col.type}</span>`;
     const row = document.createElement('div');
     row.className = 'col-row';
     row.innerHTML = `
-      <div class="col-name">${escapeHtml(h)}${tagHtml}</div>
+      <div class="col-name">${escapeHtml(col.name)}${tagHtml}</div>
       <div class="col-sample">${escapeHtml(sample || '—')}</div>
-      <select data-col="${escapeHtml(h)}">
+      <select data-col-id="${col.id}">
         <option value="keep">Keep as-is</option>
         <option value="anonymize">Anonymize</option>
         <option value="shuffle">Shuffle</option>
         <option value="redact">Redact</option>
       </select>
     `;
-    row.querySelector('select').value = columnActions[h] || 'keep';
+    row.querySelector('select').value = col.action;
     colGrid.appendChild(row);
   });
-  
+
   colGrid.querySelectorAll('select').forEach(sel => {
     sel.addEventListener('change', e => {
-      columnActions[e.target.dataset.col] = e.target.value;
+      const col = getColumn(e.target.dataset.colId);
+      if (col) col.action = e.target.value;
       renderPreview();
     });
   });
@@ -659,24 +912,20 @@ function buildColumnGrid(){
 document.querySelectorAll('.macro-btn').forEach(button => {
   button.addEventListener('click', (e) => {
     const targetAction = e.target.dataset.action;
-    headers.forEach(h => {
-      columnActions[h] = targetAction;
-    });
-    colGrid.querySelectorAll('select').forEach(select => {
-      select.value = targetAction;
-    });
+    columns.forEach(col => { col.action = targetAction; });
+    colGrid.querySelectorAll('select').forEach(select => { select.value = targetAction; });
     renderPreview();
   });
 });
 
-function generateShuffledMap(col, totalRows) {
-  if (sessionShuffledIndices[col]) return sessionShuffledIndices[col];
-  const idx = Array.from({length: totalRows}, (_, i) => i);
+function generateShuffledMap(colId, totalRows) {
+  if (sessionShuffledIndices[colId]) return sessionShuffledIndices[colId];
+  const idx = Array.from({ length: totalRows }, (_, i) => i);
   for (let i = idx.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [idx[i], idx[j]] = [idx[j], idx[i]];
   }
-  sessionShuffledIndices[col] = idx;
+  sessionShuffledIndices[colId] = idx;
   return idx;
 }
 
@@ -684,33 +933,31 @@ function buildSanitizedRows(limitCount = null){
   const runAnonMaps = {};
   const totalRows = rawRows.length;
   const processLimit = limitCount ? Math.min(limitCount, totalRows) : totalRows;
-  
+
   const shuffleCache = {};
-  headers.forEach(h => {
-    if (columnActions[h] === 'shuffle') {
-      shuffleCache[h] = generateShuffledMap(h, totalRows);
-    }
+  columns.forEach(col => {
+    if (col.action === 'shuffle') shuffleCache[col.id] = generateShuffledMap(col.id, totalRows);
   });
 
   const output = [];
   for (let i = 0; i < processLimit; i++) {
     const row = rawRows[i];
     const newRow = {};
-    
-    headers.forEach(h => {
-      const action = columnActions[h];
-      const val = row[h];
-      
+
+    columns.forEach(col => {
+      const action = col.action;
+      const val = row[col.id];
+
       if (val === undefined || val === null || String(val).trim() === '') {
-        newRow[h] = '';
+        newRow[col.id] = '';
         return;
       }
-      
+
       if (action === 'keep') {
-        newRow[h] = val;
+        newRow[col.id] = val;
       } else if (action === 'anonymize') {
-        if (!runAnonMaps[h]) runAnonMaps[h] = { map: new Map(), counter: 0 };
-        const store = runAnonMaps[h];
+        if (!runAnonMaps[col.id]) runAnonMaps[col.id] = { map: new Map(), counter: 0 };
+        const store = runAnonMaps[col.id];
         if (!store.map.has(val)) {
           store.counter++;
           const n = String(store.counter).padStart(3, '0');
@@ -721,17 +968,17 @@ function buildSanitizedRows(limitCount = null){
             store.map.set(val, `Value_${n}`);
           }
         }
-        newRow[h] = store.map.get(val);
+        newRow[col.id] = store.map.get(val);
       } else if (action === 'redact') {
         if (typeof val === 'string' && val.includes('@')) {
           const splitEmail = val.split('@');
-          newRow[h] = '██████' + '@' + (splitEmail[1] || 'domain.com');
+          newRow[col.id] = '██████' + '@' + (splitEmail[1] || 'domain.com');
         } else {
-          newRow[h] = '████████';
+          newRow[col.id] = '████████';
         }
       } else if (action === 'shuffle') {
-        const structuralIndex = shuffleCache[h][i];
-        newRow[h] = rawRows[structuralIndex] ? rawRows[structuralIndex][h] : '';
+        const structuralIndex = shuffleCache[col.id][i];
+        newRow[col.id] = rawRows[structuralIndex] ? rawRows[structuralIndex][col.id] : '';
       }
     });
     output.push(newRow);
@@ -744,31 +991,41 @@ function renderPreview(){
   const previewRows = buildSanitizedRows(displayLimit);
   previewCount.textContent = `— showing up to ${displayLimit} rows`;
 
-  let thead = '<thead><tr>' + headers.map((h, index) => {
-    return `<th draggable="true" data-index="${index}">
+  let thead = '<thead><tr><th class="row-gutter-head"></th>' + columns.map((col, index) => {
+    return `<th draggable="false" data-index="${index}" data-col-id="${col.id}">
       <div class="th-wrap">
-        <span contenteditable="true" class="header-text-span" data-index="${index}">${escapeHtml(h)}</span>
-        ${headers.length > 1 ? `<button class="col-trash-btn" onclick="deleteSpecificColumn(${index})" title="Delete this column">🗑️</button>` : ''}
-        
-        <div class="col-insert-hitbox" onclick="gridInsertColumnAt(${index + 1}); event.stopPropagation();" title="Insert column here">
-          <div class="col-insert-circle">+</div>
+        <span class="drag-handle" draggable="true" data-index="${index}" title="Drag to reorder">${GRIP_ICON}</span>
+        <span contenteditable="true" class="header-text-span" data-col-id="${col.id}">${escapeHtml(col.name)}</span>
+        <div class="th-controls">
+          <button class="col-insert-btn" onclick="gridInsertColumnAt(${index + 1}); event.stopPropagation();" title="Insert column after">${PLUS_ICON}</button>
+          ${columns.length > 1 ? `<button class="col-trash-btn" onclick="requestDeleteColumn('${col.id}')" title="Delete this column">${TRASH_ICON}</button>` : ''}
         </div>
       </div>
     </th>`;
   }).join('') + '</tr></thead>';
-  
+
   let tbody = '<tbody>' + previewRows.map((row, rowIndex) => {
-    return '<tr>' + headers.map(h => {
-      const action = columnActions[h];
-      const val = row[h] ?? '';
+    const gutter = `<td class="row-gutter">
+      <span class="row-num">${rowIndex + 1}</span>
+      <button class="row-del-btn" onclick="deleteRowAt(${rowIndex})" title="Delete row">${TRASH_ICON}</button>
+    </td>`;
+    return '<tr>' + gutter + columns.map(col => {
+      const action = col.action;
+      const val = row[col.id] ?? '';
       let cls = '';
       if (action === 'redact') cls = 'cell-redact';
       else if (action === 'shuffle') cls = 'cell-shuffle';
       else if (action === 'anonymize') cls = 'cell-anon';
-      
-      return `<td contenteditable="true" class="${cls}" data-row="${rowIndex}" data-header="${escapeHtml(h)}">${escapeHtml(String(val))}</td>`;
+
+      return `<td contenteditable="true" class="${cls}" data-row="${rowIndex}" data-col-id="${col.id}">${escapeHtml(String(val))}</td>`;
     }).join('') + '</tr>';
-  }).join('') + '</tbody>';
+  }).join('')
+  + `<tr class="add-row-ghost" onclick="gridAddRow()">
+      <td colspan="${columns.length + 1}">
+        <span class="add-row-label">${PLUS_ICON} Add row</span>
+      </td>
+    </tr>`
+  + '</tbody>';
 
   previewTable.innerHTML = thead + tbody;
 
@@ -776,173 +1033,175 @@ function renderPreview(){
 
   previewTable.querySelectorAll('thead .header-text-span').forEach(span => {
     span.addEventListener('blur', e => {
-      const oldIndex = parseInt(e.target.dataset.index);
-      const oldHeaderName = headers[oldIndex];
-      const newHeaderName = e.target.textContent.trim();
-      
-      if (newHeaderName && newHeaderName !== oldHeaderName) {
-        headers[oldIndex] = newHeaderName;
-        
-        rawRows.forEach(row => {
-          row[newHeaderName] = row[oldHeaderName];
-          delete row[oldHeaderName];
-        });
-
-        columnActions[newHeaderName] = columnActions[oldHeaderName] || 'keep';
-        columnTypes[newHeaderName] = columnTypes[oldHeaderName] || 'generic';
-        delete columnActions[oldHeaderName];
-        delete columnTypes[oldHeaderName];
-
+      const colId = e.target.dataset.colId;
+      const col = getColumn(colId);
+      if (!col) return;
+      const newName = e.target.textContent.trim();
+      if (newName && newName !== col.name) {
+        col.name = newName;
         buildColumnGrid();
         renderPreview();
+      } else {
+        e.target.textContent = col.name;
       }
     });
-    span.addEventListener('dragstart', e => e.stopPropagation());
+    span.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
+    });
   });
 
   previewTable.querySelectorAll('tbody td').forEach(td => {
     td.addEventListener('blur', e => {
       const rowIndex = parseInt(e.target.dataset.row);
-      const colHeader = e.target.dataset.header;
+      const colId = e.target.dataset.colId;
+      const col = getColumn(colId);
       const updatedValue = e.target.textContent;
 
-      if (columnActions[colHeader] !== 'keep') {
-         alert(`Notice: This column uses a masking rule (${columnActions[colHeader]}). Editing the preview overrides your source value, changing it permanently to "${updatedValue}" upon export.`);
-         columnActions[colHeader] = 'keep';
-         buildColumnGrid();
+      if (col && col.action !== 'keep') {
+        showToast(`Edited a masked cell in "${col.name}" — column toggled to "Keep as-is".`);
+        col.action = 'keep';
+        buildColumnGrid();
       }
-      
-      if (rawRows[rowIndex]) {
-        rawRows[rowIndex][colHeader] = updatedValue;
-      }
+
+      if (rawRows[rowIndex]) rawRows[rowIndex][colId] = updatedValue;
     });
   });
 }
 
 function setupDragAndDrop() {
   const ths = previewTable.querySelectorAll('thead th');
-  
-  ths.forEach(th => {
-    th.addEventListener('dragstart', function(e) {
-      dragSourceIndex = parseInt(this.dataset.index);
-      this.classList.add('dragging');
+
+  previewTable.querySelectorAll('.drag-handle').forEach(handle => {
+    handle.addEventListener('dragstart', function(e) {
+      const th = this.closest('th');
+      dragSourceColId = th.dataset.colId;
+      th.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', th.dataset.colId);
     });
-
-    th.addEventListener('dragover', function(e) {
-      e.preventDefault();
-      return false;
-    });
-
-    th.addEventListener('dragenter', function(e) {
-      if (parseInt(this.dataset.index) !== dragSourceIndex) {
-        this.classList.add('drag-over');
-      }
-    });
-
-    th.addEventListener('dragleave', function(e) {
-      this.classList.remove('drag-over');
-    });
-
-    th.addEventListener('drop', function(e) {
-      e.stopPropagation();
-      this.classList.remove('drag-over');
-      
-      const targetIndex = parseInt(this.dataset.index);
-      if (dragSourceIndex !== null && dragSourceIndex !== targetIndex) {
-        const movingHeader = headers[dragSourceIndex];
-        headers.splice(dragSourceIndex, 1);
-        headers.splice(targetIndex, 0, movingHeader);
-        
-        buildColumnGrid();
-        renderPreview();
-      }
-    });
-
-    th.addEventListener('dragend', function() {
-      ths.forEach(t => {
+    handle.addEventListener('dragend', function() {
+      previewTable.querySelectorAll('thead th').forEach(t => {
         t.classList.remove('dragging');
         t.classList.remove('drag-over');
       });
-      dragSourceIndex = null;
+      dragSourceColId = null;
+      buildColumnGrid();
+    });
+  });
+
+  ths.forEach(th => {
+    th.addEventListener('dragover', function(e) { e.preventDefault(); return false; });
+    th.addEventListener('dragenter', function(e) {
+      const targetColId = this.dataset.colId;
+      if (!targetColId) return;
+      if (dragSourceColId && targetColId !== dragSourceColId) {
+        slideColumnTo(dragSourceColId, targetColId);
+      }
     });
   });
 }
 
-function deleteSpecificColumn(index) {
-  if (headers.length <= 1) return; 
-  
-  const targetHeader = headers[index];
-  headers.splice(index, 1);
-  delete columnActions[targetHeader];
-  delete columnTypes[targetHeader];
-  
-  rawRows.forEach(row => {
-    delete row[targetHeader];
+function slideColumnTo(sourceColId, targetColId) {
+  const fromIndex = columns.findIndex(c => c.id === sourceColId);
+  const toIndex = columns.findIndex(c => c.id === targetColId);
+  if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) return;
+
+  const firstLeft = {};
+  columns.forEach(c => {
+    const th = previewTable.querySelector(`thead th[data-col-id="${c.id}"]`);
+    if (th) firstLeft[c.id] = th.getBoundingClientRect().left;
   });
+
+  moveColumn(fromIndex, toIndex);
+
+  Array.from(previewTable.rows).forEach(row => {
+    const cellById = {};
+    Array.from(row.children).forEach(cell => { cellById[cell.dataset.colId] = cell; });
+    columns.forEach(c => { if (cellById[c.id]) row.appendChild(cellById[c.id]); });
+  });
+
+  columns.forEach(c => {
+    const th = previewTable.querySelector(`thead th[data-col-id="${c.id}"]`);
+    if (!th || firstLeft[c.id] === undefined) return;
+    const lastLeft = th.getBoundingClientRect().left;
+    const delta = firstLeft[c.id] - lastLeft;
+    if (Math.abs(delta) < 0.5) return;
+
+    const cells = previewTable.querySelectorAll(`[data-col-id="${c.id}"]`);
+    cells.forEach(cell => {
+      cell.style.transition = 'none';
+      cell.style.transform = `translateX(${delta}px)`;
+    });
+    void th.offsetWidth;
+    cells.forEach(cell => {
+      cell.style.transition = 'transform 200ms cubic-bezier(.22,.9,.32,1)';
+      cell.style.transform = '';
+    });
+    cells.forEach(cell => {
+      cell.addEventListener('transitionend', () => { cell.style.transition = ''; }, { once: true });
+    });
+  });
+}
+
+function moveColumn(fromIndex, toIndex) {
+  const col = columns.splice(fromIndex, 1)[0];
+  const adjustedTo = fromIndex < toIndex ? toIndex - 1 : toIndex;
+  columns.splice(adjustedTo, 0, col);
+}
+
+function deleteSpecificColumn(colId) {
+  if (columns.length <= 1) return;
+  const idx = columns.findIndex(c => c.id === colId);
+  if (idx === -1) return;
+  columns.splice(idx, 1);
+  rawRows.forEach(row => { delete row[colId]; });
+  delete sessionShuffledIndices[colId];
 
   buildColumnGrid();
   renderPreview();
 }
 
-/* Updated column insertion logic to auto-populate sequential ID numbers */
 function gridInsertColumnAt(targetIndex) {
-  const uniqueId = headers.length + 1;
-  const newColName = `id`;
-  
-  // Resolve potential column naming collisions
-  let finalColName = newColName;
+  const existingNames = new Set(columns.map(c => c.name));
+  let finalColName = 'id';
   let counter = 1;
-  while (headers.includes(finalColName)) {
-    finalColName = `${newColName}_${counter}`;
+  while (existingNames.has(finalColName)) {
+    finalColName = `id_${counter}`;
     counter++;
   }
-  
-  headers.splice(targetIndex, 0, finalColName);
-  
-  columnActions[finalColName] = 'keep';
-  columnTypes[finalColName] = 'generic';
-  
-  // Fill all existing dataset rows systematically with unique indices (Id 1, Id 2, ...)
-  rawRows.forEach((row, rowIndex) => {
-    row[finalColName] = `Id_${rowIndex + 1}`;
-  });
+
+  const newId = nextColId();
+  columns.splice(targetIndex, 0, { id: newId, name: finalColName, type: 'generic', action: 'keep' });
+  rawRows.forEach((row, rowIndex) => { row[newId] = `Id_${rowIndex + 1}`; });
 
   buildColumnGrid();
   renderPreview();
-}
-
-function gridAddColumnEnd() {
-  gridInsertColumnAt(headers.length);
 }
 
 function gridAddRow() {
-  if (headers.length === 0) headers.push("id");
+  if (columns.length === 0) {
+    const newId = nextColId();
+    columns.push({ id: newId, name: 'id', type: 'generic', action: 'keep' });
+  }
   const newEmptyRow = {};
-  headers.forEach(h => {
-    // If the newly added row encounters an identity column structure, append a valid sequence number
-    if (h.startsWith('id')) {
-      newEmptyRow[h] = `Id ${rawRows.length + 1}`;
-    } else {
-      newEmptyRow[h] = "";
-    }
+  columns.forEach(col => {
+    newEmptyRow[col.id] = col.name.toLowerCase().startsWith('id') ? `Id ${rawRows.length + 1}` : '';
   });
   rawRows.push(newEmptyRow);
-  
+
   updateRowCountsUI();
   renderPreview();
 }
 
-function gridDeleteRow() {
-  if (rawRows.length > 0) {
-    rawRows.pop();
-    updateRowCountsUI();
-    renderPreview();
-  }
+function deleteRowAt(rowIndex) {
+  if (rowIndex < 0 || rowIndex >= rawRows.length) return;
+  rawRows.splice(rowIndex, 1);
+  updateRowCountsUI();
+  renderPreview();
 }
 
 resetBtn.addEventListener('click', () => {
-  headers.forEach(h => columnActions[h] = TYPE_ACTION[columnTypes[h]]);
+  columns.forEach(col => { col.action = TYPE_ACTION[col.type]; });
   sessionShuffledIndices = {};
   buildColumnGrid();
   renderPreview();
@@ -950,37 +1209,119 @@ resetBtn.addEventListener('click', () => {
 
 clearFileBtn.addEventListener('click', () => {
   rawRows = [];
-  headers = [];
-  columnActions = {};
-  columnTypes = {};
+  columns = [];
   sessionShuffledIndices = {};
+  colIdCounter = 0;
   fileInput.value = '';
   workspace.classList.add('hidden');
   dropzone.classList.remove('hidden');
-  statusEyebrow.textContent = 'Data Sanitization / Client-Side';
+  statusEyebrow.textContent = '/ Client-Side';
 });
 
+// MULTI-FORMAT EXPORT CORE
 downloadBtn.addEventListener('click', () => {
   if (!rawRows.length) return;
-  
-  downloadBtn.textContent = "Processing Dataset Engine...";
+
+  const targetFormat = formatSelect.value;
+  downloadBtn.textContent = 'Processing…';
   downloadBtn.disabled = true;
 
-  setTimeout(() => {
-    const sanitized = buildSanitizedRows();
-    const csv = Papa.unparse(sanitized, { columns: headers });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = originalFileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  setTimeout(async () => {
+    try {
+      const sanitized = buildSanitizedRows();
+      
+      // Remap raw internal IDs to readable UI headers configured by user
+      const exportRows = sanitized.map(row => {
+        const out = {};
+        columns.forEach(col => { out[col.name] = row[col.id]; });
+        return out;
+      });
 
-    downloadBtn.textContent = "Download sanitized CSV";
-    downloadBtn.disabled = false;
+      let blob, finalMime, ext;
+
+      switch(targetFormat) {
+        case 'csv':
+          const csvStr = Papa.unparse(exportRows, { columns: columns.map(c => c.name) });
+          blob = new Blob([csvStr], { type: 'text/csv;charset=utf-8;' });
+          ext = 'csv';
+          break;
+
+        case 'xlsx':
+          const wb = XLSX.utils.book_new();
+          const ws = XLSX.utils.json_to_sheet(exportRows, { header: columns.map(c => c.name) });
+          XLSX.utils.book_append_sheet(wb, ws, "Sanitized Data");
+          const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+          blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+          ext = 'xlsx';
+          break;
+
+        case 'json':
+          const jsonStr = JSON.stringify(exportRows, null, 2);
+          blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+          ext = 'json';
+          break;
+
+        case 'sql':
+          const tableName = "sanitized_records";
+          let sqlStr = `-- Exported Clean Data\n`;
+          exportRows.forEach(row => {
+            const keys = columns.map(c => `\`${c.name}\``).join(', ');
+            const values = columns.map(c => {
+              const val = row[c.name];
+              if (val === null || val === undefined) return 'NULL';
+              return `'${String(val).replace(/'/g, "''")}'`;
+            }).join(', ');
+            sqlStr += `INSERT INTO ${tableName} (${keys}) VALUES (${values});\n`;
+          });
+          blob = new Blob([sqlStr], { type: 'text/plain;charset=utf-8;' });
+          ext = 'sql';
+          break;
+
+        case 'parquet':
+          if (typeof parquet === 'undefined') {
+            throw new Error("Parquet engine compilation deferred. Try again or check network accessibility.");
+          }
+          // Dynamic schema calculation matching basic textual configurations
+          const parquetSchemaFields = {};
+          columns.forEach(c => {
+            parquetSchemaFields[c.name] = { type: 'UTF8' };
+          });
+          const schema = new parquet.ParquetSchema(parquetSchemaFields);
+          
+          // Using an in-memory buffer array to simulate localized storage stream
+          const buffers = [];
+          const writer = await parquet.ParquetWriter.openStream(schema, {
+            write: (buf) => buffers.push(buf),
+            end: () => {}
+          });
+          
+          for (const row of exportRows) {
+            await writer.appendRow(row);
+          }
+          await writer.close();
+          
+          blob = new Blob(buffers, { type: 'application/octet-stream' });
+          ext = 'parquet';
+          break;
+      }
+
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${originalFileNameBase}.${ext}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    } catch (err) {
+      console.error(err);
+      showToast(`Export failure: ${err.message}`);
+    } finally {
+      downloadBtn.textContent = 'Download Sanitized Data';
+      downloadBtn.disabled = false;
+    }
   }, 50);
 });
 
