@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7FBJCELHRJ"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7FBJCELHRJ"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-7FBJCELHRJ');
 </script>
 <meta charset="UTF-8">
@@ -146,7 +145,6 @@
   }
   .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* Macro Toolbar Layout */
   .macro-bar {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -168,6 +166,34 @@
     cursor: pointer;
   }
   .macro-btn:hover { border-color: var(--muted); color: var(--accent); }
+
+  .grid-action-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .grid-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 6px 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+  .grid-btn:hover {
+    background: var(--surface-2);
+    border-color: var(--muted);
+  }
+  .grid-btn.danger-btn:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+  }
 
   .col-grid { display: flex; flex-direction: column; border: 1px solid var(--border); }
   .col-row {
@@ -210,8 +236,9 @@
   option[value=shuffle] { color: var(--accent); }
   option[value=redact] { color: var(--danger); }
 
-  .table-scroll { border: 1px solid var(--border); overflow: auto; max-height: 360px; }
+  .table-scroll { border: 1px solid var(--border); overflow: auto; max-height: 360px; position: relative; }
   table { border-collapse: collapse; width: 100%; font-family: var(--mono); font-size: 12.5px; }
+  
   thead th {
     position: sticky; top: 0;
     background: var(--surface-2);
@@ -221,7 +248,107 @@
     font-weight: 600;
     white-space: nowrap;
     z-index: 2;
+    cursor: grab;
+    user-select: none;
+    transition: background-color 0.15s ease;
   }
+  thead th:active { cursor: grabbing; }
+  thead th.drag-over { background-color: var(--surface); border-left: 2px dashed var(--teal); }
+  thead th.dragging { opacity: 0.4; }
+
+  .th-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    position: relative;
+    pointer-events: none;
+  }
+  .th-wrap * { pointer-events: auto; }
+
+  .header-text-span {
+    flex: 1;
+    display: inline-block;
+    min-width: 40px;
+    margin-right: 8px;
+  }
+  .header-text-span:focus {
+    outline: 2px solid var(--teal);
+    background: var(--surface);
+    padding: 2px 4px;
+  }
+  
+  .col-trash-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 5px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+    margin-right: 4px;
+  }
+  .col-trash-btn:hover {
+    color: var(--danger);
+    background: rgba(255, 61, 0, 0.15);
+  }
+
+  .col-insert-hitbox {
+    position: absolute;
+    right: -20px;
+    top: -9px;
+    bottom: -9px;
+    width: 16px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .col-insert-hitbox:hover {
+    opacity: 1;
+  }
+  .col-insert-hitbox::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 7px;
+    width: 2px;
+    background: var(--teal);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+  }
+  .col-insert-hitbox:hover::before {
+    opacity: 0.4;
+  }
+  .col-insert-circle {
+    width: 20px;
+    height: 20px;
+    background: var(--teal);
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    transition: transform 0.1s ease, background-color 0.1s ease;
+    z-index: 11;
+  }
+  .col-insert-circle:hover {
+    transform: scale(1.25);
+    background: var(--accent-bg);
+    color: #000000;
+  }
+
   tbody td {
     padding: 8px 12px;
     border-bottom: 1px solid var(--border);
@@ -230,8 +357,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  tbody td[contenteditable="true"]:focus {
+    outline: 2px solid var(--accent);
+    background: var(--surface-2) !important;
+    overflow: visible;
+    max-width: none;
+  }
   tbody tr:nth-child(odd) { background: var(--surface); }
-   
+    
   .cell-redact { 
     background: repeating-linear-gradient(45deg, #2b120c 0 4px, #421b12 4px 8px); 
     color: var(--danger);
@@ -345,6 +478,13 @@
 
     <section>
       <div class="section-title">Live preview <span id="previewCount" style="text-transform:none;letter-spacing:0;"></span></div>
+      
+      <div class="grid-action-bar">
+        <button class="grid-btn" onclick="gridAddRow()">➕ Add Row</button>
+        <button class="grid-btn danger-btn" onclick="gridDeleteRow()">❌ Remove Last Row</button>
+        <button class="grid-btn" onclick="gridAddColumnEnd()">➕ Append Column to End</button>
+      </div>
+
       <div class="table-scroll"><table id="previewTable"></table></div>
     </section>
 
@@ -382,6 +522,7 @@ let columnActions = {};
 let columnTypes = {};
 let originalFileName = 'data_sanitized.csv';
 let sessionShuffledIndices = {};
+let dragSourceIndex = null;
 
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
@@ -471,16 +612,17 @@ function parseCSV(text){
     columnActions[h] = TYPE_ACTION[type];
   });
 
-  const delim = result.meta.delimiter === ';' ? 'semicolon' : 'comma';
-  statusEyebrow.textContent = `Data Sanitization / ${rawRows.length} rows / ${delim}-delimited`;
-  
-  console.log(`%c🔒 SECURITY REPORT: Verified ingestion of file [${originalFileName}] directly into localized window runtime execution loop. Outbound transmission pipeline status: BLOCKED/SANDBOXED.`, "color: #00E676; font-weight: bold; font-family: monospace;");
-
+  updateRowCountsUI();
   buildColumnGrid();
   renderPreview();
   
   dropzone.classList.add('hidden');
   workspace.classList.remove('hidden');
+}
+
+function updateRowCountsUI() {
+  const delim = 'comma'; 
+  statusEyebrow.textContent = `Data Sanitization / ${rawRows.length} rows / ${delim}-delimited`;
   fullRowCount.textContent = `${rawRows.length} rows total`;
 }
 
@@ -488,7 +630,7 @@ function buildColumnGrid(){
   colGrid.innerHTML = '';
   headers.forEach(h => {
     const sample = rawRows[0] ? rawRows[0][h] : '';
-    const type = columnTypes[h];
+    const type = columnTypes[h] || 'generic';
     const tagHtml = type === 'generic' ? '' : `<span class="type-tag detected">${type}</span>`;
     const row = document.createElement('div');
     row.className = 'col-row';
@@ -502,7 +644,7 @@ function buildColumnGrid(){
         <option value="redact">Redact</option>
       </select>
     `;
-    row.querySelector('select').value = columnActions[h];
+    row.querySelector('select').value = columnActions[h] || 'keep';
     colGrid.appendChild(row);
   });
   
@@ -589,7 +731,7 @@ function buildSanitizedRows(limitCount = null){
         }
       } else if (action === 'shuffle') {
         const structuralIndex = shuffleCache[h][i];
-        newRow[h] = rawRows[structuralIndex][h];
+        newRow[h] = rawRows[structuralIndex] ? rawRows[structuralIndex][h] : '';
       }
     });
     output.push(newRow);
@@ -598,11 +740,24 @@ function buildSanitizedRows(limitCount = null){
 }
 
 function renderPreview(){
-  const previewRows = buildSanitizedRows(10);
-  previewCount.textContent = `— showing ${previewRows.length} of ${rawRows.length}`;
+  const displayLimit = 100;
+  const previewRows = buildSanitizedRows(displayLimit);
+  previewCount.textContent = `— showing up to ${displayLimit} rows`;
 
-  let thead = '<thead><tr>' + headers.map(h => `<th>${escapeHtml(h)}</th>`).join('') + '</tr></thead>';
-  let tbody = '<tbody>' + previewRows.map((row, i) => {
+  let thead = '<thead><tr>' + headers.map((h, index) => {
+    return `<th draggable="true" data-index="${index}">
+      <div class="th-wrap">
+        <span contenteditable="true" class="header-text-span" data-index="${index}">${escapeHtml(h)}</span>
+        ${headers.length > 1 ? `<button class="col-trash-btn" onclick="deleteSpecificColumn(${index})" title="Delete this column">🗑️</button>` : ''}
+        
+        <div class="col-insert-hitbox" onclick="gridInsertColumnAt(${index + 1}); event.stopPropagation();" title="Insert column here">
+          <div class="col-insert-circle">+</div>
+        </div>
+      </div>
+    </th>`;
+  }).join('') + '</tr></thead>';
+  
+  let tbody = '<tbody>' + previewRows.map((row, rowIndex) => {
     return '<tr>' + headers.map(h => {
       const action = columnActions[h];
       const val = row[h] ?? '';
@@ -610,11 +765,180 @@ function renderPreview(){
       if (action === 'redact') cls = 'cell-redact';
       else if (action === 'shuffle') cls = 'cell-shuffle';
       else if (action === 'anonymize') cls = 'cell-anon';
-      return `<td class="${cls}">${escapeHtml(String(val))}</td>`;
+      
+      return `<td contenteditable="true" class="${cls}" data-row="${rowIndex}" data-header="${escapeHtml(h)}">${escapeHtml(String(val))}</td>`;
     }).join('') + '</tr>';
   }).join('') + '</tbody>';
 
   previewTable.innerHTML = thead + tbody;
+
+  setupDragAndDrop();
+
+  previewTable.querySelectorAll('thead .header-text-span').forEach(span => {
+    span.addEventListener('blur', e => {
+      const oldIndex = parseInt(e.target.dataset.index);
+      const oldHeaderName = headers[oldIndex];
+      const newHeaderName = e.target.textContent.trim();
+      
+      if (newHeaderName && newHeaderName !== oldHeaderName) {
+        headers[oldIndex] = newHeaderName;
+        
+        rawRows.forEach(row => {
+          row[newHeaderName] = row[oldHeaderName];
+          delete row[oldHeaderName];
+        });
+
+        columnActions[newHeaderName] = columnActions[oldHeaderName] || 'keep';
+        columnTypes[newHeaderName] = columnTypes[oldHeaderName] || 'generic';
+        delete columnActions[oldHeaderName];
+        delete columnTypes[oldHeaderName];
+
+        buildColumnGrid();
+        renderPreview();
+      }
+    });
+    span.addEventListener('dragstart', e => e.stopPropagation());
+  });
+
+  previewTable.querySelectorAll('tbody td').forEach(td => {
+    td.addEventListener('blur', e => {
+      const rowIndex = parseInt(e.target.dataset.row);
+      const colHeader = e.target.dataset.header;
+      const updatedValue = e.target.textContent;
+
+      if (columnActions[colHeader] !== 'keep') {
+         alert(`Notice: This column uses a masking rule (${columnActions[colHeader]}). Editing the preview overrides your source value, changing it permanently to "${updatedValue}" upon export.`);
+         columnActions[colHeader] = 'keep';
+         buildColumnGrid();
+      }
+      
+      if (rawRows[rowIndex]) {
+        rawRows[rowIndex][colHeader] = updatedValue;
+      }
+    });
+  });
+}
+
+function setupDragAndDrop() {
+  const ths = previewTable.querySelectorAll('thead th');
+  
+  ths.forEach(th => {
+    th.addEventListener('dragstart', function(e) {
+      dragSourceIndex = parseInt(this.dataset.index);
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    th.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      return false;
+    });
+
+    th.addEventListener('dragenter', function(e) {
+      if (parseInt(this.dataset.index) !== dragSourceIndex) {
+        this.classList.add('drag-over');
+      }
+    });
+
+    th.addEventListener('dragleave', function(e) {
+      this.classList.remove('drag-over');
+    });
+
+    th.addEventListener('drop', function(e) {
+      e.stopPropagation();
+      this.classList.remove('drag-over');
+      
+      const targetIndex = parseInt(this.dataset.index);
+      if (dragSourceIndex !== null && dragSourceIndex !== targetIndex) {
+        const movingHeader = headers[dragSourceIndex];
+        headers.splice(dragSourceIndex, 1);
+        headers.splice(targetIndex, 0, movingHeader);
+        
+        buildColumnGrid();
+        renderPreview();
+      }
+    });
+
+    th.addEventListener('dragend', function() {
+      ths.forEach(t => {
+        t.classList.remove('dragging');
+        t.classList.remove('drag-over');
+      });
+      dragSourceIndex = null;
+    });
+  });
+}
+
+function deleteSpecificColumn(index) {
+  if (headers.length <= 1) return; 
+  
+  const targetHeader = headers[index];
+  headers.splice(index, 1);
+  delete columnActions[targetHeader];
+  delete columnTypes[targetHeader];
+  
+  rawRows.forEach(row => {
+    delete row[targetHeader];
+  });
+
+  buildColumnGrid();
+  renderPreview();
+}
+
+/* Updated column insertion logic to auto-populate sequential ID numbers */
+function gridInsertColumnAt(targetIndex) {
+  const uniqueId = headers.length + 1;
+  const newColName = `id`;
+  
+  // Resolve potential column naming collisions
+  let finalColName = newColName;
+  let counter = 1;
+  while (headers.includes(finalColName)) {
+    finalColName = `${newColName}_${counter}`;
+    counter++;
+  }
+  
+  headers.splice(targetIndex, 0, finalColName);
+  
+  columnActions[finalColName] = 'keep';
+  columnTypes[finalColName] = 'generic';
+  
+  // Fill all existing dataset rows systematically with unique indices (Id 1, Id 2, ...)
+  rawRows.forEach((row, rowIndex) => {
+    row[finalColName] = `Id_${rowIndex + 1}`;
+  });
+
+  buildColumnGrid();
+  renderPreview();
+}
+
+function gridAddColumnEnd() {
+  gridInsertColumnAt(headers.length);
+}
+
+function gridAddRow() {
+  if (headers.length === 0) headers.push("id");
+  const newEmptyRow = {};
+  headers.forEach(h => {
+    // If the newly added row encounters an identity column structure, append a valid sequence number
+    if (h.startsWith('id')) {
+      newEmptyRow[h] = `Id ${rawRows.length + 1}`;
+    } else {
+      newEmptyRow[h] = "";
+    }
+  });
+  rawRows.push(newEmptyRow);
+  
+  updateRowCountsUI();
+  renderPreview();
+}
+
+function gridDeleteRow() {
+  if (rawRows.length > 0) {
+    rawRows.pop();
+    updateRowCountsUI();
+    renderPreview();
+  }
 }
 
 resetBtn.addEventListener('click', () => {
