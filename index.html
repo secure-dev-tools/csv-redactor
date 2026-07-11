@@ -10,9 +10,9 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Free Data Redactor — Sanitize, Mask & Shuffle Spreadsheets Locally</title>
-<meta name="description" content="Anonymize, redact, and shuffle sensitive columns completely in your browser. 100% private, client-side data masking tool for compliance with GDPR, HIPAA, and CCPA.">
-<meta name="keywords" content="csv redactor, anonymize csv, shuffle csv columns, client side data masking, free data sanitizer, scrub PII spreadsheet">
+<title>Free CSV Editor & Data Redactor — View, Edit, Sanitize & Mask Spreadsheets Locally</title>
+<meta name="description" content="Edit, sort, search, and anonymize CSV, Excel, and JSON files entirely in your browser. Full spreadsheet editor plus privacy-safe data masking. 100% client-side, GDPR/HIPAA-friendly.">
+<meta name="keywords" content="csv editor online, csv viewer, edit csv in browser, csv redactor, anonymize csv, shuffle csv columns, client side data masking, free data sanitizer, scrub PII spreadsheet">
 <!-- Library Dependencies -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -79,7 +79,7 @@
     -webkit-font-smoothing: antialiased;
     transition: background-color .2s ease, color .2s ease;
   }
-  .wrap { max-width: 1040px; margin: 0 auto; padding: 48px 24px 90px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 48px 24px 90px; }
   ::selection { background: color-mix(in srgb, var(--accent) 35%, transparent); }
 
   /* ---------- Header ---------- */
@@ -119,7 +119,7 @@
 
   h1 {
     font-family: var(--sans);
-    font-size: 36px;
+    font-size: 34px;
     font-weight: 800;
     letter-spacing: -0.02em;
     margin: 0 0 12px;
@@ -128,7 +128,7 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  header p { color: var(--muted); font-size: 15px; line-height: 1.65; max-width: 580px; margin: 0 0 20px; }
+  header p { color: var(--muted); font-size: 15px; line-height: 1.65; max-width: 600px; margin: 0 0 20px; }
 
   .badge-container { display: flex; gap: 10px; flex-wrap: wrap; }
   .badge {
@@ -187,7 +187,7 @@
   .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
   .workspace-head {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; flex-wrap: wrap;
   }
   .btn {
     font-family: var(--mono);
@@ -208,6 +208,11 @@
   .btn.btn-accent:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
   .btn.btn-danger:hover { border-color: var(--danger); color: var(--danger); }
   .btn.btn-sm { padding: 6px 10px; font-size: 11px; }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+  .btn:disabled:hover { border-color: var(--border); background: var(--surface); }
+  .btn svg { width: 12px; height: 12px; pointer-events: none; }
+
+  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
 
   .macro-bar {
     background: var(--surface);
@@ -296,8 +301,8 @@
   .col-grid { display: flex; flex-direction: column; gap: 8px; }
   .col-row {
     display: grid;
-    grid-template-columns: 1fr 1fr 180px;
-    gap: 16px;
+    grid-template-columns: 1fr 0.9fr 128px 150px;
+    gap: 14px;
     align-items: center;
     padding: 13px 16px;
     border: 1px solid var(--border);
@@ -343,14 +348,57 @@
   option[value=shuffle] { color: var(--accent); }
   option[value=redact] { color: var(--danger); }
 
-  /* ---------- Table ---------- */
+  /* ---------- Toolbar (search) ---------- */
+  .preview-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .search-box {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 340px;
+  }
+  .search-box svg {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    width: 13px; height: 13px; color: var(--muted-2); pointer-events: none;
+  }
+  .search-box input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12.5px;
+    padding: 9px 10px 9px 30px;
+    transition: border-color .15s;
+  }
+  .search-box input:focus { outline: none; border-color: var(--accent); }
+  .search-box input::placeholder { color: var(--muted-2); }
+  .search-match-count { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .search-clear-btn {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    background: transparent; border: none; color: var(--muted-2); cursor: pointer;
+    width: 18px; height: 18px; display: none; align-items: center; justify-content: center; border-radius: 4px;
+  }
+  .search-clear-btn.show { display: flex; }
+  .search-clear-btn:hover { color: var(--text); }
+  .search-clear-btn svg { width: 11px; height: 11px; pointer-events: none; }
+  .hint-text { font-family: var(--mono); font-size: 10.5px; color: var(--muted-2); }
+
+  /* ---------- Row gutter (numbers / hover-delete) ---------- */
   .table-scroll {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: auto;
-    max-height: 380px;
+    max-height: 420px;
     position: relative;
     box-shadow: var(--shadow-sm);
+    user-select: none;
   }
   .table-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
   .table-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -424,7 +472,7 @@
   }
   .btn-modal-delete:hover { filter: brightness(1.08); }
 
-  .th-wrap { display: flex; align-items: center; gap: 4px; padding: 8px 6px 8px 6px; }
+  .th-wrap { display: flex; align-items: center; gap: 3px; padding: 8px 6px 8px 6px; }
 
   .drag-handle {
     flex: none;
@@ -438,6 +486,21 @@
   .drag-handle:hover { color: var(--accent-strong); background: color-mix(in srgb, var(--accent) 12%, transparent); }
   .drag-handle:active { cursor: grabbing; }
   .drag-handle svg { width: 12px; height: 12px; pointer-events: none; }
+
+  .sort-btn {
+    flex: none;
+    display: flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px;
+    border-radius: 5px;
+    border: none;
+    background: transparent;
+    color: var(--muted-2);
+    cursor: pointer;
+    transition: color .15s, background .15s;
+  }
+  .sort-btn:hover { color: var(--teal); background: color-mix(in srgb, var(--teal) 12%, transparent); }
+  .sort-btn.active { color: var(--teal); }
+  .sort-btn svg { width: 12px; height: 12px; pointer-events: none; }
 
   .header-text-span {
     flex: 1;
@@ -508,14 +571,20 @@
     overflow: hidden;
     text-overflow: ellipsis;
     border-radius: 4px;
+    cursor: cell;
   }
-  tbody td[contenteditable="true"]:hover { background: color-mix(in srgb, var(--muted-2) 8%, transparent); }
-  tbody td[contenteditable="true"]:focus {
+  tbody td:hover { background: color-mix(in srgb, var(--muted-2) 8%, transparent); }
+  tbody td[contenteditable="true"] {
     outline: 2px solid var(--accent);
     outline-offset: -2px;
     background: var(--surface-2) !important;
     overflow: visible;
     max-width: none;
+    cursor: text;
+  }
+  tbody td.cell-selected {
+    background: color-mix(in srgb, var(--accent) 18%, transparent) !important;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent);
   }
   tbody tr:nth-child(odd) { background: color-mix(in srgb, var(--surface-2) 55%, transparent); }
   tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
@@ -606,6 +675,17 @@
   .seo-content li { margin-bottom: 8px; }
   .faq-block { margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
 
+  kbd {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: var(--text);
+  }
+
   @media (max-width: 640px) {
     .col-row { grid-template-columns: 1fr; gap: 8px; }
     h1 { font-size: 28px; }
@@ -625,8 +705,8 @@
       </div>
       <button class="theme-toggle" id="themeToggle"></button>
     </div>
-    <h1>Sanitize your Data, without leaving your browser</h1>
-    <p>Upload a CSV, configure actions row-by-row, and extract beautifully redacted structural copies into complex backend ecosystem files effortlessly.</p>
+    <h1>View, edit, and sanitize your data — without leaving your browser</h1>
+    <p>Open a CSV, Excel, or JSON file, edit it like a spreadsheet — sort, search, select and paste, undo/redo — then mask sensitive columns and export to whatever format you need.</p>
 
     <div class="badge-container">
       <div class="badge"><span class="dot"></span>Zero servers — processing stays localized</div>
@@ -638,16 +718,24 @@
     <div class="dz-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>
     </div>
-    <strong>Drop a CSV file here, or click to browse</strong>
-    <span id="dzSub">.csv files only — parsing happens locally</span>
-    <input type="file" id="fileInput" accept=".csv">
+    <strong>Drop a CSV, Excel, or JSON file here, or click to browse</strong>
+    <span id="dzSub">.csv, .xlsx, .xls, .json — parsing happens locally</span>
+    <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.json">
   </div>
 
   <div id="workspace" class="hidden">
     <section>
       <div class="workspace-head">
         <div class="section-title" style="margin-bottom:0;">Column actions</div>
-        <div style="display: flex; gap: 8px;">
+        <div class="btn-group">
+          <button class="btn btn-sm" id="undoBtn" title="Undo (Ctrl+Z)" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 015.5 5.5v0a5.5 5.5 0 01-5.5 5.5H11"/></svg>
+            Undo
+          </button>
+          <button class="btn btn-sm" id="redoBtn" title="Redo (Ctrl+Y)" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 004 14.5v0A5.5 5.5 0 009.5 20H13"/></svg>
+            Redo
+          </button>
           <button class="btn btn-sm" id="clearFileBtn">Clear file</button>
           <button class="btn btn-sm btn-accent" id="resetBtn">Reset to suggestions</button>
         </div>
@@ -666,6 +754,18 @@
 
     <section>
       <div class="section-title">Live preview <span id="previewCount" style="text-transform:none;letter-spacing:0;"></span></div>
+
+      <div class="preview-toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="searchInput" placeholder="Search all columns…">
+          <button class="search-clear-btn" id="searchClearBtn" title="Clear search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <span class="search-match-count" id="searchMatchCount"></span>
+        <span class="hint-text">Click a header's sort icon to sort • Shift+click cells to select a range • <kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>Ctrl</kbd>+<kbd>V</kbd> to copy/paste • <kbd>Ctrl</kbd>+<kbd>Z</kbd> to undo</span>
+      </div>
 
       <div class="table-scroll"><table id="previewTable"></table></div>
     </section>
@@ -686,10 +786,20 @@
   </div>
 
   <article class="seo-content">
-    <h2>Secure, Browser-Based Data Masking &amp; Multi-Format Exporter</h2>
-    <p>When working with customer analytics, AI development pipelines, or software testing environments, handling Personally Identifiable Information (PII) safely is critical. This open-source, client-side application helps developers, compliance officers, and data scientists safely strip away sensitive fields before sharing reports or loading logs into storage formats.</p>
+    <h2>A Full CSV Editor, Viewer &amp; Data Masking Tool — All in Your Browser</h2>
+    <p>Whether you're cleaning up a spreadsheet, exploring a dataset, or preparing customer records for sharing, this tool works like a lightweight spreadsheet editor with privacy-safe masking built in. Open CSV, Excel, or JSON files, edit cells directly, sort and search your data, then selectively anonymize or redact sensitive fields before exporting.</p>
 
-    <h3>Supported Data Manipulation Strategies</h3>
+    <h3>Editing &amp; Viewing Features</h3>
+    <ul>
+      <li><strong>Multi-format import:</strong> Open .csv, .xlsx, .xls, or .json files directly — no conversion needed.</li>
+      <li><strong>Inline editing:</strong> Double-click any cell to edit it, rename column headers, add or delete rows and columns.</li>
+      <li><strong>Sort &amp; search:</strong> Click a column's sort icon to order rows, or use the search box to filter across every column instantly.</li>
+      <li><strong>Cell selection &amp; copy/paste:</strong> Click and shift+click to select a range of cells, then copy or paste like a normal spreadsheet.</li>
+      <li><strong>Undo/redo:</strong> Every edit, sort, and masking change can be undone with Ctrl+Z.</li>
+      <li><strong>Column formatting:</strong> Mark columns as numbers or dates for cleaner display and correct sort order.</li>
+    </ul>
+
+    <h3>Supported Data Masking Strategies</h3>
     <ul>
       <li><strong>Redact (Data Masking):</strong> Replaces cell text entirely with block masking. Emails retain their domain (e.g., <code>████@domain.com</code>) so downstream formats still validate.</li>
       <li><strong>Anonymize (Pseudo-anonymization):</strong> Replaces raw inputs with matching pseudo-identities (like <code>user001@example.com</code> or <code>Value_001</code>). Identical raw values map consistently across rows.</li>
@@ -701,6 +811,14 @@
     <div class="faq-block">
       <h3>Is it secure to upload corporate files to this tool?</h3>
       <p>This application is static and operates entirely within client-side memory using your browser's local sandbox. Your file is parsed directly in your device's memory using HTML5 file handles and is never transmitted to a remote server.</p>
+    </div>
+    <div class="faq-block">
+      <h3>Can I edit a CSV file without Excel?</h3>
+      <p>Yes. This tool works as a full CSV editor in your browser — you can rename headers, add or remove rows and columns, sort, search, and copy/paste cells without installing any spreadsheet software.</p>
+    </div>
+    <div class="faq-block">
+      <h3>Does the search box filter the exported file too?</h3>
+      <p>No — search only affects what you see in the live preview. Downloads always include the full dataset (with your chosen masking rules applied), regardless of the current search or sort.</p>
     </div>
   </article>
 
@@ -714,7 +832,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>
     </div>
     <p class="modal-title">Delete this column?</p>
-    <p class="modal-body">Remove <strong id="deleteModalColName"></strong> and its data from every row. You can't undo this.</p>
+    <p class="modal-body">Remove <strong id="deleteModalColName"></strong> and its data from every row. You can't undo this from the button below, but Ctrl+Z will bring it back.</p>
     <div class="modal-actions">
       <button class="btn-modal-cancel" id="deleteModalCancel">Cancel</button>
       <button class="btn-modal-delete" id="deleteModalConfirm">Delete</button>
@@ -723,12 +841,22 @@
 </div>
 
 <script>
-let columns = [];          
-let rawRows = [];          
+let columns = [];          // {id, name, type, action, format}
+let rawRows = [];          // array of {colId: value}
 let originalFileNameBase = 'data_sanitized';
-let sessionShuffledIndices = {}; 
-let dragSourceColId = null;   
+let sessionShuffledIndices = {};
+let dragSourceColId = null;
 let colIdCounter = 0;
+
+// New state
+let undoStack = [];
+let redoStack = [];
+const MAX_UNDO = 50;
+let sortState = { colId: null, dir: null }; // dir: 'asc' | 'desc' | null
+let searchQuery = '';
+let selAnchor = null; // {viewRow, colIdx}
+let selEnd = null;
+let currentPreviewRows = []; // rows currently rendered, each carries __idx (index into rawRows)
 
 function nextColId(){ colIdCounter += 1; return 'c' + colIdCounter; }
 
@@ -746,6 +874,11 @@ const clearFileBtn = document.getElementById('clearFileBtn');
 const themeToggle = document.getElementById('themeToggle');
 const statusEyebrow = document.getElementById('statusEyebrow');
 const toastHost = document.getElementById('toastHost');
+const undoBtn = document.getElementById('undoBtn');
+const redoBtn = document.getElementById('redoBtn');
+const searchInput = document.getElementById('searchInput');
+const searchClearBtn = document.getElementById('searchClearBtn');
+const searchMatchCount = document.getElementById('searchMatchCount');
 
 function showToast(message){
   const el = document.createElement('div');
@@ -785,6 +918,9 @@ const MOON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13
 const GRIP_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="6" r="1.6"/><circle cx="8" cy="12" r="1.6"/><circle cx="8" cy="18" r="1.6"/><circle cx="16" cy="6" r="1.6"/><circle cx="16" cy="12" r="1.6"/><circle cx="16" cy="18" r="1.6"/></svg>';
 const TRASH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>';
 const PLUS_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>';
+const SORT_NONE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>';
+const SORT_ASC_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>';
+const SORT_DESC_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';
 
 function setTheme(isLight){
   document.body.classList.toggle('light-theme', isLight);
@@ -794,6 +930,7 @@ themeToggle.addEventListener('click', () => setTheme(!document.body.classList.co
 setTheme(false);
 
 const TYPE_ACTION = { email: 'anonymize', name: 'anonymize', phone: 'redact', id: 'redact', generic: 'keep' };
+const FORMAT_HINT = { email: 'text', name: 'text', phone: 'text', id: 'text', generic: 'auto' };
 
 function detectColumnType(header, samples){
   const h = header.toLowerCase().trim();
@@ -816,6 +953,18 @@ function detectColumnType(header, samples){
   return 'generic';
 }
 
+function detectFormatGuess(samples){
+  const nonEmpty = samples.filter(v => v !== undefined && v !== null && String(v).trim() !== '');
+  if (!nonEmpty.length) return 'auto';
+  const isNum = v => !isNaN(parseFloat(String(v).replace(/,/g,''))) && isFinite(String(v).replace(/,/g,''));
+  const isDate = v => !isNaN(Date.parse(v)) && /\d{4}|\d{1,2}[\/\-]\d{1,2}/.test(String(v));
+  if (nonEmpty.every(isNum)) return 'number';
+  if (nonEmpty.every(isDate)) return 'date';
+  return 'auto';
+}
+
+/* ---------------- File input / drag-drop ---------------- */
+
 dropzone.addEventListener('click', () => fileInput.click());
 dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag'); });
 dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
@@ -829,25 +978,85 @@ fileInput.addEventListener('change', e => {
 });
 
 function handleFile(file){
-  originalFileNameBase = file.name.replace(/\.csv$/i, '') + '_sanitized';
-  const reader = new FileReader();
-  reader.onload = e => parseCSV(e.target.result);
-  reader.readAsText(file, 'UTF-8');
+  const ext = file.name.split('.').pop().toLowerCase();
+  originalFileNameBase = file.name.replace(/\.[^/.]+$/, '') + '_sanitized';
+
+  if (ext === 'csv') {
+    const reader = new FileReader();
+    reader.onload = e => parseCSV(e.target.result);
+    reader.onerror = () => showToast('Could not read that file.');
+    reader.readAsText(file, 'UTF-8');
+  } else if (ext === 'xlsx' || ext === 'xls') {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const wb = XLSX.read(data, { type: 'array' });
+        const firstSheet = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(firstSheet, { defval: '', raw: false });
+        loadParsedData(rows);
+      } catch (err) {
+        showToast('Failed to read spreadsheet: ' + err.message);
+      }
+    };
+    reader.onerror = () => showToast('Could not read that file.');
+    reader.readAsArrayBuffer(file);
+  } else if (ext === 'json') {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        let data = JSON.parse(e.target.result);
+        if (!Array.isArray(data)) {
+          if (data && typeof data === 'object') data = [data];
+          else throw new Error('JSON must be an array of objects.');
+        }
+        loadParsedData(data);
+      } catch (err) {
+        showToast('Failed to parse JSON: ' + err.message);
+      }
+    };
+    reader.onerror = () => showToast('Could not read that file.');
+    reader.readAsText(file, 'UTF-8');
+  } else {
+    showToast('Unsupported file type. Please upload a .csv, .xlsx, .xls, or .json file.');
+  }
 }
 
 function parseCSV(text){
   const result = Papa.parse(text, { header: true, skipEmptyLines: true });
   const parsedRows = result.data;
-  const parsedHeaders = result.meta.fields || [];
-
   if (parsedRows.length === 0) {
     showToast('The uploaded CSV appears to be completely empty.');
+    return;
+  }
+  loadParsedData(parsedRows, result.meta.fields || []);
+}
+
+function loadParsedData(parsedRows, headerHint){
+  if (!parsedRows || !parsedRows.length) {
+    showToast('The uploaded file appears to be empty.');
+    return;
+  }
+
+  let parsedHeaders = (headerHint && headerHint.length) ? headerHint.slice() : Array.from(
+    parsedRows.reduce((set, row) => { Object.keys(row).forEach(k => set.add(k)); return set; }, new Set())
+  );
+  if (!parsedHeaders.length) {
+    showToast('Could not find any columns in that file.');
     return;
   }
 
   colIdCounter = 0;
   columns = [];
   sessionShuffledIndices = {};
+  undoStack = [];
+  redoStack = [];
+  sortState = { colId: null, dir: null };
+  searchQuery = '';
+  selAnchor = null;
+  selEnd = null;
+  if (searchInput) searchInput.value = '';
+  if (searchClearBtn) searchClearBtn.classList.remove('show');
 
   const nameToId = {};
   parsedHeaders.forEach(h => {
@@ -855,18 +1064,23 @@ function parseCSV(text){
     nameToId[h] = id;
     const samples = parsedRows.slice(0, 20).map(r => r[h]);
     const type = detectColumnType(h, samples);
-    columns.push({ id, name: h, type, action: TYPE_ACTION[type] });
+    const format = type === 'generic' ? detectFormatGuess(samples) : 'text';
+    columns.push({ id, name: h, type, action: TYPE_ACTION[type], format });
   });
 
   rawRows = parsedRows.map(row => {
     const newRow = {};
-    parsedHeaders.forEach(h => { newRow[nameToId[h]] = row[h]; });
+    parsedHeaders.forEach(h => {
+      const v = row[h];
+      newRow[nameToId[h]] = (v === undefined || v === null) ? '' : v;
+    });
     return newRow;
   });
 
   updateRowCountsUI();
   buildColumnGrid();
   renderPreview();
+  updateUndoRedoButtons();
 
   dropzone.classList.add('hidden');
   workspace.classList.remove('hidden');
@@ -879,6 +1093,57 @@ function updateRowCountsUI() {
 
 function getColumn(id){ return columns.find(c => c.id === id); }
 
+/* ---------------- Undo / redo ---------------- */
+
+function snapshotState(){
+  return JSON.stringify({ columns, rawRows, sessionShuffledIndices, sortState });
+}
+function pushUndo(){
+  undoStack.push(snapshotState());
+  if (undoStack.length > MAX_UNDO) undoStack.shift();
+  redoStack = [];
+  updateUndoRedoButtons();
+}
+function restoreState(json){
+  const state = JSON.parse(json);
+  columns = state.columns;
+  rawRows = state.rawRows;
+  sessionShuffledIndices = state.sessionShuffledIndices || {};
+  sortState = state.sortState || { colId: null, dir: null };
+}
+function undo(){
+  if (!undoStack.length) return;
+  redoStack.push(snapshotState());
+  const prev = undoStack.pop();
+  restoreState(prev);
+  selAnchor = null; selEnd = null;
+  buildColumnGrid();
+  renderPreview();
+  updateRowCountsUI();
+  updateUndoRedoButtons();
+  showToast('Undid last change.');
+}
+function redo(){
+  if (!redoStack.length) return;
+  undoStack.push(snapshotState());
+  const next = redoStack.pop();
+  restoreState(next);
+  selAnchor = null; selEnd = null;
+  buildColumnGrid();
+  renderPreview();
+  updateRowCountsUI();
+  updateUndoRedoButtons();
+  showToast('Redid change.');
+}
+function updateUndoRedoButtons(){
+  undoBtn.disabled = undoStack.length === 0;
+  redoBtn.disabled = redoStack.length === 0;
+}
+undoBtn.addEventListener('click', undo);
+redoBtn.addEventListener('click', redo);
+
+/* ---------------- Column config grid ---------------- */
+
 function buildColumnGrid(){
   colGrid.innerHTML = '';
   columns.forEach(col => {
@@ -889,21 +1154,35 @@ function buildColumnGrid(){
     row.innerHTML = `
       <div class="col-name">${escapeHtml(col.name)}${tagHtml}</div>
       <div class="col-sample">${escapeHtml(sample || '—')}</div>
-      <select data-col-id="${col.id}">
+      <select class="format-select" data-col-id="${col.id}">
+        <option value="auto">Auto</option>
+        <option value="text">Text</option>
+        <option value="number">Number</option>
+        <option value="date">Date</option>
+      </select>
+      <select class="action-select" data-col-id="${col.id}">
         <option value="keep">Keep as-is</option>
         <option value="anonymize">Anonymize</option>
         <option value="shuffle">Shuffle</option>
         <option value="redact">Redact</option>
       </select>
     `;
-    row.querySelector('select').value = col.action;
+    row.querySelector('.action-select').value = col.action;
+    row.querySelector('.format-select').value = col.format || 'auto';
     colGrid.appendChild(row);
   });
 
-  colGrid.querySelectorAll('select').forEach(sel => {
+  colGrid.querySelectorAll('.action-select').forEach(sel => {
     sel.addEventListener('change', e => {
       const col = getColumn(e.target.dataset.colId);
-      if (col) col.action = e.target.value;
+      if (col) { pushUndo(); col.action = e.target.value; }
+      renderPreview();
+    });
+  });
+  colGrid.querySelectorAll('.format-select').forEach(sel => {
+    sel.addEventListener('change', e => {
+      const col = getColumn(e.target.dataset.colId);
+      if (col) { pushUndo(); col.format = e.target.value; }
       renderPreview();
     });
   });
@@ -912,11 +1191,14 @@ function buildColumnGrid(){
 document.querySelectorAll('.macro-btn').forEach(button => {
   button.addEventListener('click', (e) => {
     const targetAction = e.target.dataset.action;
+    pushUndo();
     columns.forEach(col => { col.action = targetAction; });
-    colGrid.querySelectorAll('select').forEach(select => { select.value = targetAction; });
+    colGrid.querySelectorAll('.action-select').forEach(select => { select.value = targetAction; });
     renderPreview();
   });
 });
+
+/* ---------------- Sanitization core ---------------- */
 
 function generateShuffledMap(colId, totalRows) {
   if (sessionShuffledIndices[colId]) return sessionShuffledIndices[colId];
@@ -929,10 +1211,9 @@ function generateShuffledMap(colId, totalRows) {
   return idx;
 }
 
-function buildSanitizedRows(limitCount = null){
+function buildSanitizedRowsForIndices(indices){
   const runAnonMaps = {};
   const totalRows = rawRows.length;
-  const processLimit = limitCount ? Math.min(limitCount, totalRows) : totalRows;
 
   const shuffleCache = {};
   columns.forEach(col => {
@@ -940,9 +1221,9 @@ function buildSanitizedRows(limitCount = null){
   });
 
   const output = [];
-  for (let i = 0; i < processLimit; i++) {
+  indices.forEach(i => {
     const row = rawRows[i];
-    const newRow = {};
+    const newRow = { __idx: i };
 
     columns.forEach(col => {
       const action = col.action;
@@ -982,19 +1263,119 @@ function buildSanitizedRows(limitCount = null){
       }
     });
     output.push(newRow);
-  }
+  });
   return output;
 }
 
+function buildSanitizedRows(limitCount = null){
+  const totalRows = rawRows.length;
+  const processLimit = limitCount ? Math.min(limitCount, totalRows) : totalRows;
+  const indices = Array.from({ length: processLimit }, (_, i) => i);
+  return buildSanitizedRowsForIndices(indices);
+}
+
+/* ---------------- Sort / search (view only) ---------------- */
+
+function compareValues(a, b, format){
+  const sa = (a === undefined || a === null) ? '' : String(a);
+  const sb = (b === undefined || b === null) ? '' : String(b);
+  if (sa === '' && sb === '') return 0;
+  if (sa === '') return 1;
+  if (sb === '') return -1;
+  if (format === 'number') {
+    const na = parseFloat(sa.replace(/,/g,'')), nb = parseFloat(sb.replace(/,/g,''));
+    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+  }
+  if (format === 'date') {
+    const da = Date.parse(sa), db = Date.parse(sb);
+    if (!isNaN(da) && !isNaN(db)) return da - db;
+  }
+  return sa.localeCompare(sb, undefined, { numeric: true, sensitivity: 'base' });
+}
+
+function getViewIndices(){
+  let indices = rawRows.map((_, i) => i);
+
+  if (searchQuery.trim()) {
+    const q = searchQuery.trim().toLowerCase();
+    indices = indices.filter(i => {
+      return columns.some(col => String(rawRows[i][col.id] ?? '').toLowerCase().includes(q));
+    });
+  }
+
+  if (sortState.colId && sortState.dir) {
+    const col = getColumn(sortState.colId);
+    if (col) {
+      indices = indices.slice().sort((a, b) => {
+        const cmp = compareValues(rawRows[a][col.id], rawRows[b][col.id], col.format);
+        return sortState.dir === 'asc' ? cmp : -cmp;
+      });
+    }
+  }
+
+  return indices;
+}
+
+function formatDisplayValue(val, format){
+  if (val === undefined || val === null || val === '') return '';
+  if (format === 'number') {
+    const n = parseFloat(String(val).replace(/,/g,''));
+    if (!isNaN(n)) return new Intl.NumberFormat().format(n);
+  }
+  if (format === 'date') {
+    const d = new Date(val);
+    if (!isNaN(d.getTime())) return d.toLocaleDateString();
+  }
+  return val;
+}
+
+searchInput.addEventListener('input', e => {
+  searchQuery = e.target.value;
+  searchClearBtn.classList.toggle('show', searchQuery.length > 0);
+  selAnchor = null; selEnd = null;
+  renderPreview();
+});
+searchClearBtn.addEventListener('click', () => {
+  searchQuery = '';
+  searchInput.value = '';
+  searchClearBtn.classList.remove('show');
+  renderPreview();
+  searchInput.focus();
+});
+
+function cycleSort(colId){
+  if (sortState.colId !== colId) {
+    sortState = { colId, dir: 'asc' };
+  } else if (sortState.dir === 'asc') {
+    sortState = { colId, dir: 'desc' };
+  } else {
+    sortState = { colId: null, dir: null };
+  }
+  renderPreview();
+}
+
+/* ---------------- Preview rendering ---------------- */
+
 function renderPreview(){
   const displayLimit = 100;
-  const previewRows = buildSanitizedRows(displayLimit);
-  previewCount.textContent = `— showing up to ${displayLimit} rows`;
+  const viewIndices = getViewIndices();
+  const limited = viewIndices.slice(0, displayLimit);
+  currentPreviewRows = buildSanitizedRowsForIndices(limited);
+
+  if (searchQuery.trim()) {
+    searchMatchCount.textContent = `${viewIndices.length} match${viewIndices.length === 1 ? '' : 'es'}`;
+  } else {
+    searchMatchCount.textContent = '';
+  }
+  previewCount.textContent = `— showing up to ${displayLimit} rows${searchQuery.trim() || sortState.colId ? ' (filtered/sorted view)' : ''}`;
 
   let thead = '<thead><tr><th class="row-gutter-head"></th>' + columns.map((col, index) => {
+    const isSorted = sortState.colId === col.id;
+    const sortIcon = isSorted ? (sortState.dir === 'asc' ? SORT_ASC_ICON : SORT_DESC_ICON) : SORT_NONE_ICON;
     return `<th draggable="false" data-index="${index}" data-col-id="${col.id}">
       <div class="th-wrap">
         <span class="drag-handle" draggable="true" data-index="${index}" title="Drag to reorder">${GRIP_ICON}</span>
+        <button class="sort-btn${isSorted ? ' active' : ''}" onclick="cycleSort('${col.id}'); event.stopPropagation();" title="Sort by this column">${sortIcon}</button>
         <span contenteditable="true" class="header-text-span" data-col-id="${col.id}">${escapeHtml(col.name)}</span>
         <div class="th-controls">
           <button class="col-insert-btn" onclick="gridInsertColumnAt(${index + 1}); event.stopPropagation();" title="Insert column after">${PLUS_ICON}</button>
@@ -1004,20 +1385,23 @@ function renderPreview(){
     </th>`;
   }).join('') + '</tr></thead>';
 
-  let tbody = '<tbody>' + previewRows.map((row, rowIndex) => {
+  let tbody = '<tbody>' + currentPreviewRows.map((row, viewRow) => {
+    const origIdx = row.__idx;
     const gutter = `<td class="row-gutter">
-      <span class="row-num">${rowIndex + 1}</span>
-      <button class="row-del-btn" onclick="deleteRowAt(${rowIndex})" title="Delete row">${TRASH_ICON}</button>
+      <span class="row-num">${origIdx + 1}</span>
+      <button class="row-del-btn" onclick="deleteRowAt(${origIdx})" title="Delete row">${TRASH_ICON}</button>
     </td>`;
-    return '<tr>' + gutter + columns.map(col => {
+    return '<tr>' + gutter + columns.map((col, colIdx) => {
       const action = col.action;
-      const val = row[col.id] ?? '';
+      const rawVal = row[col.id] ?? '';
       let cls = '';
       if (action === 'redact') cls = 'cell-redact';
       else if (action === 'shuffle') cls = 'cell-shuffle';
       else if (action === 'anonymize') cls = 'cell-anon';
+      const displayVal = action === 'keep' ? formatDisplayValue(rawVal, col.format) : rawVal;
+      const selected = isCellSelected(viewRow, colIdx) ? ' cell-selected' : '';
 
-      return `<td contenteditable="true" class="${cls}" data-row="${rowIndex}" data-col-id="${col.id}">${escapeHtml(String(val))}</td>`;
+      return `<td class="${cls}${selected}" data-view-row="${viewRow}" data-row-orig="${origIdx}" data-col-id="${col.id}" data-col-idx="${colIdx}">${escapeHtml(String(displayVal))}</td>`;
     }).join('') + '</tr>';
   }).join('')
   + `<tr class="add-row-ghost" onclick="gridAddRow()">
@@ -1030,6 +1414,7 @@ function renderPreview(){
   previewTable.innerHTML = thead + tbody;
 
   setupDragAndDrop();
+  setupCellInteractions();
 
   previewTable.querySelectorAll('thead .header-text-span').forEach(span => {
     span.addEventListener('blur', e => {
@@ -1038,6 +1423,7 @@ function renderPreview(){
       if (!col) return;
       const newName = e.target.textContent.trim();
       if (newName && newName !== col.name) {
+        pushUndo();
         col.name = newName;
         buildColumnGrid();
         renderPreview();
@@ -1049,13 +1435,63 @@ function renderPreview(){
       if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
     });
   });
+}
 
-  previewTable.querySelectorAll('tbody td').forEach(td => {
+/* ---------------- Cell selection, editing, copy/paste ---------------- */
+
+function isCellSelected(viewRow, colIdx){
+  if (!selAnchor || !selEnd) return false;
+  const r1 = Math.min(selAnchor.viewRow, selEnd.viewRow), r2 = Math.max(selAnchor.viewRow, selEnd.viewRow);
+  const c1 = Math.min(selAnchor.colIdx, selEnd.colIdx), c2 = Math.max(selAnchor.colIdx, selEnd.colIdx);
+  return viewRow >= r1 && viewRow <= r2 && colIdx >= c1 && colIdx <= c2;
+}
+
+function applySelectionHighlight(){
+  previewTable.querySelectorAll('tbody td[data-view-row]').forEach(td => {
+    const vr = parseInt(td.dataset.viewRow);
+    const ci = parseInt(td.dataset.colIdx);
+    td.classList.toggle('cell-selected', isCellSelected(vr, ci));
+  });
+}
+
+function setupCellInteractions(){
+  previewTable.querySelectorAll('tbody td[data-view-row]').forEach(td => {
+    td.addEventListener('click', e => {
+      if (td.getAttribute('contenteditable') === 'true') return;
+      const viewRow = parseInt(td.dataset.viewRow);
+      const colIdx = parseInt(td.dataset.colIdx);
+      if (e.shiftKey && selAnchor) {
+        selEnd = { viewRow, colIdx };
+      } else {
+        selAnchor = { viewRow, colIdx };
+        selEnd = { viewRow, colIdx };
+      }
+      applySelectionHighlight();
+    });
+
+    td.addEventListener('dblclick', () => {
+      td.setAttribute('contenteditable', 'true');
+      td.focus();
+      const range = document.createRange();
+      range.selectNodeContents(td);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+
     td.addEventListener('blur', e => {
-      const rowIndex = parseInt(e.target.dataset.row);
+      if (td.getAttribute('contenteditable') !== 'true') return;
+      td.setAttribute('contenteditable', 'false');
+
+      const rowOrig = parseInt(e.target.dataset.rowOrig);
       const colId = e.target.dataset.colId;
       const col = getColumn(colId);
       const updatedValue = e.target.textContent;
+      const oldValue = rawRows[rowOrig] ? String(rawRows[rowOrig][colId] ?? '') : '';
+
+      if (updatedValue === oldValue) return;
+
+      pushUndo();
 
       if (col && col.action !== 'keep') {
         showToast(`Edited a masked cell in "${col.name}" — column toggled to "Keep as-is".`);
@@ -1063,10 +1499,114 @@ function renderPreview(){
         buildColumnGrid();
       }
 
-      if (rawRows[rowIndex]) rawRows[rowIndex][colId] = updatedValue;
+      if (rawRows[rowOrig]) rawRows[rowOrig][colId] = updatedValue;
+      renderPreview();
+    });
+
+    td.addEventListener('keydown', e => {
+      if (td.getAttribute('contenteditable') === 'true' && e.key === 'Enter') {
+        e.preventDefault();
+        td.blur();
+      }
     });
   });
 }
+
+document.addEventListener('keydown', e => {
+  const meta = e.ctrlKey || e.metaKey;
+  const activeIsEditing = document.activeElement && document.activeElement.getAttribute && document.activeElement.getAttribute('contenteditable') === 'true';
+
+  if (meta && e.key.toLowerCase() === 'z' && !e.shiftKey) {
+    if (activeIsEditing) return;
+    e.preventDefault();
+    undo();
+  } else if (meta && (e.key.toLowerCase() === 'y' || (e.key.toLowerCase() === 'z' && e.shiftKey))) {
+    if (activeIsEditing) return;
+    e.preventDefault();
+    redo();
+  } else if (meta && e.key.toLowerCase() === 'c') {
+    if (activeIsEditing || !selAnchor) return;
+    copySelection();
+  } else if (meta && e.key.toLowerCase() === 'v') {
+    if (activeIsEditing || !selAnchor) return;
+    e.preventDefault();
+    pasteAtSelection();
+  } else if (e.key === 'Escape') {
+    selAnchor = null; selEnd = null;
+    applySelectionHighlight();
+  }
+});
+
+function copySelection(){
+  if (!selAnchor || !selEnd) return;
+  const r1 = Math.min(selAnchor.viewRow, selEnd.viewRow), r2 = Math.max(selAnchor.viewRow, selEnd.viewRow);
+  const c1 = Math.min(selAnchor.colIdx, selEnd.colIdx), c2 = Math.max(selAnchor.colIdx, selEnd.colIdx);
+  const lines = [];
+  for (let r = r1; r <= r2; r++) {
+    const rowVals = [];
+    const rowData = currentPreviewRows[r];
+    for (let c = c1; c <= c2; c++) {
+      const col = columns[c];
+      rowVals.push(rowData && col ? String(rowData[col.id] ?? '') : '');
+    }
+    lines.push(rowVals.join('\t'));
+  }
+  const text = lines.join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => showToast(`Copied ${(r2 - r1 + 1) * (c2 - c1 + 1)} cell(s).`))
+      .catch(() => showToast('Copy failed — clipboard permission denied.'));
+  } else {
+    showToast('Clipboard access is not available in this browser.');
+  }
+}
+
+async function pasteAtSelection(){
+  if (!selAnchor) return;
+  if (!navigator.clipboard || !navigator.clipboard.readText) {
+    showToast('Clipboard access is not available in this browser.');
+    return;
+  }
+  let text;
+  try {
+    text = await navigator.clipboard.readText();
+  } catch (err) {
+    showToast('Paste failed — clipboard permission denied.');
+    return;
+  }
+  if (!text) return;
+
+  pushUndo();
+
+  const startR = Math.min(selAnchor.viewRow, selEnd ? selEnd.viewRow : selAnchor.viewRow);
+  const startC = Math.min(selAnchor.colIdx, selEnd ? selEnd.colIdx : selAnchor.colIdx);
+  const lines = text.replace(/\r/g, '').split('\n');
+  while (lines.length && lines[lines.length - 1] === '') lines.pop();
+
+  let clamped = false;
+  let touchedCols = new Set();
+
+  lines.forEach((lineText, ri) => {
+    const targetViewRow = startR + ri;
+    if (targetViewRow >= currentPreviewRows.length) { clamped = true; return; }
+    const origIdx = currentPreviewRows[targetViewRow].__idx;
+    const cells = lineText.split('\t');
+    cells.forEach((val, ci) => {
+      const targetColIdx = startC + ci;
+      if (targetColIdx >= columns.length) { clamped = true; return; }
+      const col = columns[targetColIdx];
+      rawRows[origIdx][col.id] = val;
+      if (col.action !== 'keep') touchedCols.add(col.id);
+    });
+  });
+
+  touchedCols.forEach(colId => { const c = getColumn(colId); if (c) c.action = 'keep'; });
+  if (touchedCols.size) buildColumnGrid();
+  renderPreview();
+  showToast(clamped ? 'Pasted (clipped to grid bounds).' : 'Pasted from clipboard.');
+}
+
+/* ---------------- Drag & drop column reorder ---------------- */
 
 function setupDragAndDrop() {
   const ths = previewTable.querySelectorAll('thead th');
@@ -1075,6 +1615,7 @@ function setupDragAndDrop() {
     handle.addEventListener('dragstart', function(e) {
       const th = this.closest('th');
       dragSourceColId = th.dataset.colId;
+      pushUndo();
       th.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData('text/plain', th.dataset.colId);
@@ -1113,12 +1654,7 @@ function slideColumnTo(sourceColId, targetColId) {
   });
 
   moveColumn(fromIndex, toIndex);
-
-  Array.from(previewTable.rows).forEach(row => {
-    const cellById = {};
-    Array.from(row.children).forEach(cell => { cellById[cell.dataset.colId] = cell; });
-    columns.forEach(c => { if (cellById[c.id]) row.appendChild(cellById[c.id]); });
-  });
+  renderPreview();
 
   columns.forEach(c => {
     const th = previewTable.querySelector(`thead th[data-col-id="${c.id}"]`);
@@ -1149,13 +1685,17 @@ function moveColumn(fromIndex, toIndex) {
   columns.splice(adjustedTo, 0, col);
 }
 
+/* ---------------- Row / column mutation ---------------- */
+
 function deleteSpecificColumn(colId) {
   if (columns.length <= 1) return;
   const idx = columns.findIndex(c => c.id === colId);
   if (idx === -1) return;
+  pushUndo();
   columns.splice(idx, 1);
   rawRows.forEach(row => { delete row[colId]; });
   delete sessionShuffledIndices[colId];
+  if (sortState.colId === colId) sortState = { colId: null, dir: null };
 
   buildColumnGrid();
   renderPreview();
@@ -1170,8 +1710,9 @@ function gridInsertColumnAt(targetIndex) {
     counter++;
   }
 
+  pushUndo();
   const newId = nextColId();
-  columns.splice(targetIndex, 0, { id: newId, name: finalColName, type: 'generic', action: 'keep' });
+  columns.splice(targetIndex, 0, { id: newId, name: finalColName, type: 'generic', action: 'keep', format: 'text' });
   rawRows.forEach((row, rowIndex) => { row[newId] = `Id_${rowIndex + 1}`; });
 
   buildColumnGrid();
@@ -1179,9 +1720,10 @@ function gridInsertColumnAt(targetIndex) {
 }
 
 function gridAddRow() {
+  pushUndo();
   if (columns.length === 0) {
     const newId = nextColId();
-    columns.push({ id: newId, name: 'id', type: 'generic', action: 'keep' });
+    columns.push({ id: newId, name: 'id', type: 'generic', action: 'keep', format: 'text' });
   }
   const newEmptyRow = {};
   columns.forEach(col => {
@@ -1195,12 +1737,15 @@ function gridAddRow() {
 
 function deleteRowAt(rowIndex) {
   if (rowIndex < 0 || rowIndex >= rawRows.length) return;
+  pushUndo();
   rawRows.splice(rowIndex, 1);
+  selAnchor = null; selEnd = null;
   updateRowCountsUI();
   renderPreview();
 }
 
 resetBtn.addEventListener('click', () => {
+  pushUndo();
   columns.forEach(col => { col.action = TYPE_ACTION[col.type]; });
   sessionShuffledIndices = {};
   buildColumnGrid();
@@ -1212,13 +1757,22 @@ clearFileBtn.addEventListener('click', () => {
   columns = [];
   sessionShuffledIndices = {};
   colIdCounter = 0;
+  undoStack = [];
+  redoStack = [];
+  sortState = { colId: null, dir: null };
+  searchQuery = '';
+  selAnchor = null; selEnd = null;
   fileInput.value = '';
+  searchInput.value = '';
+  searchClearBtn.classList.remove('show');
+  updateUndoRedoButtons();
   workspace.classList.add('hidden');
   dropzone.classList.remove('hidden');
   statusEyebrow.textContent = '/ Client-Side';
 });
 
-// MULTI-FORMAT EXPORT CORE
+/* ---------------- Multi-format export ---------------- */
+
 downloadBtn.addEventListener('click', () => {
   if (!rawRows.length) return;
 
@@ -1229,15 +1783,14 @@ downloadBtn.addEventListener('click', () => {
   setTimeout(async () => {
     try {
       const sanitized = buildSanitizedRows();
-      
-      // Remap raw internal IDs to readable UI headers configured by user
+
       const exportRows = sanitized.map(row => {
         const out = {};
         columns.forEach(col => { out[col.name] = row[col.id]; });
         return out;
       });
 
-      let blob, finalMime, ext;
+      let blob, ext;
 
       switch(targetFormat) {
         case 'csv':
@@ -1281,25 +1834,23 @@ downloadBtn.addEventListener('click', () => {
           if (typeof parquet === 'undefined') {
             throw new Error("Parquet engine compilation deferred. Try again or check network accessibility.");
           }
-          // Dynamic schema calculation matching basic textual configurations
           const parquetSchemaFields = {};
           columns.forEach(c => {
             parquetSchemaFields[c.name] = { type: 'UTF8' };
           });
           const schema = new parquet.ParquetSchema(parquetSchemaFields);
-          
-          // Using an in-memory buffer array to simulate localized storage stream
+
           const buffers = [];
           const writer = await parquet.ParquetWriter.openStream(schema, {
             write: (buf) => buffers.push(buf),
             end: () => {}
           });
-          
+
           for (const row of exportRows) {
             await writer.appendRow(row);
           }
           await writer.close();
-          
+
           blob = new Blob(buffers, { type: 'application/octet-stream' });
           ext = 'parquet';
           break;
