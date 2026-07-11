@@ -13,7 +13,6 @@
 <title>Free CSV Editor & Data Redactor — View, Edit, Sanitize & Mask Spreadsheets Locally</title>
 <meta name="description" content="Edit, sort, search, and anonymize CSV, Excel, and JSON files entirely in your browser. Full spreadsheet editor plus privacy-safe data masking. 100% client-side, GDPR/HIPAA-friendly.">
 <meta name="keywords" content="csv editor online, csv viewer, edit csv in browser, csv redactor, anonymize csv, shuffle csv columns, client side data masking, free data sanitizer, scrub PII spreadsheet">
-<!-- Library Dependencies -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/parquetjs@0.1.1/dist/parquet.min.js" defer></script>
@@ -87,13 +86,13 @@
   .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
   .brand { display: flex; align-items: center; gap: 10px; }
   .brand-mark {
-    width: 34px; height: 34px; border-radius: 10px;
+    width: 42px; height: 42px; border-radius: 10px;
     background: linear-gradient(135deg, var(--accent), var(--teal));
     display: flex; align-items: center; justify-content: center;
     box-shadow: var(--shadow-sm);
     flex: none;
   }
-  .brand-mark svg { width: 18px; height: 18px; color: #fff; }
+  .brand-mark svg { width: 24px; height: 24px; color: #fff; }
   .brand-name { font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .02em; }
   .brand-name .dim { color: var(--muted); font-weight: 500; }
 
@@ -115,7 +114,7 @@
     transition: color .15s, border-color .15s, background .15s;
   }
   .theme-toggle:hover { color: var(--text); border-color: var(--accent); }
-  .theme-toggle svg { width: 13px; height: 13px; flex: none; }
+  .theme-toggle svg { width: 16px; height: 16px; flex: none; }
 
   h1 {
     font-family: var(--sans);
@@ -161,12 +160,12 @@
   .dropzone:hover { border-color: var(--accent-strong); transform: translateY(-1px); }
   .dropzone.drag { border-color: var(--accent); background: var(--surface-2); transform: scale(1.005); }
   .dropzone .dz-icon {
-    width: 46px; height: 46px; margin: 0 auto 16px;
+    width: 56px; height: 56px; margin: 0 auto 16px;
     border-radius: 12px;
     background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, transparent), color-mix(in srgb, var(--teal) 18%, transparent));
     display: flex; align-items: center; justify-content: center;
   }
-  .dropzone .dz-icon svg { width: 22px; height: 22px; color: var(--accent-strong); }
+  .dropzone .dz-icon svg { width: 28px; height: 28px; color: var(--accent-strong); }
   .dropzone strong { font-size: 15.5px; display: block; margin-bottom: 6px; }
   .dropzone span { color: var(--muted); font-size: 13px; }
   input[type=file] { display: none; }
@@ -207,10 +206,10 @@
   .btn.btn-accent { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
   .btn.btn-accent:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
   .btn.btn-danger:hover { border-color: var(--danger); color: var(--danger); }
-  .btn.btn-sm { padding: 6px 10px; font-size: 11px; }
+  .btn.btn-sm { padding: 8px 12px; font-size: 12px; }
   .btn:disabled { opacity: .4; cursor: not-allowed; }
   .btn:disabled:hover { border-color: var(--border); background: var(--surface); }
-  .btn svg { width: 12px; height: 12px; pointer-events: none; }
+  .btn svg { width: 16px; height: 16px; pointer-events: none; }
 
   .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
 
@@ -279,7 +278,7 @@
   tbody tr:hover td.row-gutter .row-num { opacity: 0; }
   tbody tr:hover td.row-gutter .row-del-btn { opacity: 1; }
   td.row-gutter .row-del-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 16%, transparent); }
-  td.row-gutter .row-del-btn svg { width: 12px; height: 12px; pointer-events: none; }
+  td.row-gutter .row-del-btn svg { width: 16px; height: 16px; pointer-events: none; }
 
   tr.add-row-ghost td {
     border-bottom: none;
@@ -295,7 +294,7 @@
   }
   tr.add-row-ghost:hover td { color: var(--teal); background: color-mix(in srgb, var(--teal) 7%, transparent); }
   tr.add-row-ghost .add-row-label { display: inline-flex; align-items: center; gap: 6px; }
-  tr.add-row-ghost .add-row-label svg { width: 12px; height: 12px; }
+  tr.add-row-ghost .add-row-label svg { width: 16px; height: 16px; }
 
   /* ---------- Column config rows ---------- */
   .col-grid { display: flex; flex-direction: column; gap: 8px; }
@@ -364,7 +363,7 @@
   }
   .search-box svg {
     position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-    width: 13px; height: 13px; color: var(--muted-2); pointer-events: none;
+    width: 16px; height: 16px; color: var(--muted-2); pointer-events: none;
   }
   .search-box input {
     width: 100%;
@@ -374,7 +373,7 @@
     color: var(--text);
     font-family: var(--mono);
     font-size: 12.5px;
-    padding: 9px 10px 9px 30px;
+    padding: 9px 10px 9px 34px;
     transition: border-color .15s;
   }
   .search-box input:focus { outline: none; border-color: var(--accent); }
@@ -383,11 +382,11 @@
   .search-clear-btn {
     position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
     background: transparent; border: none; color: var(--muted-2); cursor: pointer;
-    width: 18px; height: 18px; display: none; align-items: center; justify-content: center; border-radius: 4px;
+    width: 22px; height: 22px; display: none; align-items: center; justify-content: center; border-radius: 4px;
   }
   .search-clear-btn.show { display: flex; }
   .search-clear-btn:hover { color: var(--text); }
-  .search-clear-btn svg { width: 11px; height: 11px; pointer-events: none; }
+  .search-clear-btn svg { width: 14px; height: 14px; pointer-events: none; }
   .hint-text { font-family: var(--mono); font-size: 10.5px; color: var(--muted-2); }
 
   /* ---------- Row gutter (numbers / hover-delete) ---------- */
@@ -446,13 +445,13 @@
   }
   @keyframes modal-in { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
   .modal-icon {
-    width: 38px; height: 38px; border-radius: 10px;
+    width: 44px; height: 44px; border-radius: 10px;
     background: color-mix(in srgb, var(--danger) 16%, transparent);
     color: var(--danger);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 14px;
   }
-  .modal-icon svg { width: 18px; height: 18px; }
+  .modal-icon svg { width: 22px; height: 22px; }
   .modal-title { font-family: var(--sans); font-weight: 700; font-size: 16px; margin: 0 0 8px; }
   .modal-body { font-size: 13.5px; color: var(--muted); line-height: 1.55; margin: 0 0 20px; }
   .modal-body strong { color: var(--text); }
@@ -472,12 +471,12 @@
   }
   .btn-modal-delete:hover { filter: brightness(1.08); }
 
-  .th-wrap { display: flex; align-items: center; gap: 3px; padding: 8px 6px 8px 6px; }
+  .th-wrap { display: flex; align-items: center; gap: 5px; padding: 10px 8px; }
 
   .drag-handle {
     flex: none;
     display: flex; align-items: center; justify-content: center;
-    width: 18px; height: 18px;
+    width: 24px; height: 24px;
     border-radius: 5px;
     color: var(--muted-2);
     cursor: grab;
@@ -485,12 +484,12 @@
   }
   .drag-handle:hover { color: var(--accent-strong); background: color-mix(in srgb, var(--accent) 12%, transparent); }
   .drag-handle:active { cursor: grabbing; }
-  .drag-handle svg { width: 12px; height: 12px; pointer-events: none; }
+  .drag-handle svg { width: 16px; height: 16px; pointer-events: none; }
 
   .sort-btn {
     flex: none;
     display: flex; align-items: center; justify-content: center;
-    width: 18px; height: 18px;
+    width: 24px; height: 24px;
     border-radius: 5px;
     border: none;
     background: transparent;
@@ -500,7 +499,7 @@
   }
   .sort-btn:hover { color: var(--teal); background: color-mix(in srgb, var(--teal) 12%, transparent); }
   .sort-btn.active { color: var(--teal); }
-  .sort-btn svg { width: 12px; height: 12px; pointer-events: none; }
+  .sort-btn svg { width: 16px; height: 16px; pointer-events: none; }
 
   .header-text-span {
     flex: 1;
@@ -520,7 +519,7 @@
     flex: none;
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 4px;
   }
 
   .col-trash-btn {
@@ -529,8 +528,8 @@
     border: none;
     color: var(--muted-2);
     cursor: pointer;
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -540,13 +539,13 @@
   }
   thead th:hover .col-trash-btn,
   thead th:focus-within .col-trash-btn { opacity: 1; }
-  .col-trash-btn svg { width: 12px; height: 12px; pointer-events: none; }
+  .col-trash-btn svg { width: 16px; height: 16px; pointer-events: none; }
   .col-trash-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 14%, transparent); }
 
   .col-insert-btn {
     flex: none;
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
     border: none;
     border-radius: 5px;
     background: transparent;
@@ -560,7 +559,7 @@
   }
   thead th:hover .col-insert-btn,
   thead th:focus-within .col-insert-btn { opacity: 1; }
-  .col-insert-btn svg { width: 13px; height: 13px; pointer-events: none; }
+  .col-insert-btn svg { width: 16px; height: 16px; pointer-events: none; }
   .col-insert-btn:hover { color: var(--teal); background: color-mix(in srgb, var(--teal) 16%, transparent); }
 
   tbody td {
@@ -719,7 +718,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>
     </div>
     <strong>Drop a CSV, Excel, or JSON file here, or click to browse</strong>
-    <span id="dzSub">.csv, .xlsx, .xls, .json — parsing happens locally</span>
+    <span id="dzSub">.csv, .xlsx, .xls, .json — nested JSON is auto-flattened — parsing happens locally</span>
     <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.json">
   </div>
 
@@ -748,13 +747,11 @@
         <button class="macro-btn" data-action="shuffle">Shuffle all</button>
         <button class="macro-btn" data-action="redact">Redact all</button>
       </div>
-
       <div class="col-grid" id="colGrid"></div>
     </section>
 
     <section>
       <div class="section-title">Live preview <span id="previewCount" style="text-transform:none;letter-spacing:0;"></span></div>
-
       <div class="preview-toolbar">
         <div class="search-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -766,7 +763,6 @@
         <span class="search-match-count" id="searchMatchCount"></span>
         <span class="hint-text">Click a header's sort icon to sort • Shift+click cells to select a range • <kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>Ctrl</kbd>+<kbd>V</kbd> to copy/paste • <kbd>Ctrl</kbd>+<kbd>Z</kbd> to undo</span>
       </div>
-
       <div class="table-scroll"><table id="previewTable"></table></div>
     </section>
 
@@ -788,7 +784,6 @@
   <article class="seo-content">
     <h2>A Full CSV Editor, Viewer &amp; Data Masking Tool — All in Your Browser</h2>
     <p>Whether you're cleaning up a spreadsheet, exploring a dataset, or preparing customer records for sharing, this tool works like a lightweight spreadsheet editor with privacy-safe masking built in. Open CSV, Excel, or JSON files, edit cells directly, sort and search your data, then selectively anonymize or redact sensitive fields before exporting.</p>
-
     <h3>Editing &amp; Viewing Features</h3>
     <ul>
       <li><strong>Multi-format import:</strong> Open .csv, .xlsx, .xls, or .json files directly — no conversion needed.</li>
@@ -798,30 +793,7 @@
       <li><strong>Undo/redo:</strong> Every edit, sort, and masking change can be undone with Ctrl+Z.</li>
       <li><strong>Column formatting:</strong> Mark columns as numbers or dates for cleaner display and correct sort order.</li>
     </ul>
-
-    <h3>Supported Data Masking Strategies</h3>
-    <ul>
-      <li><strong>Redact (Data Masking):</strong> Replaces cell text entirely with block masking. Emails retain their domain (e.g., <code>████@domain.com</code>) so downstream formats still validate.</li>
-      <li><strong>Anonymize (Pseudo-anonymization):</strong> Replaces raw inputs with matching pseudo-identities (like <code>user001@example.com</code> or <code>Value_001</code>). Identical raw values map consistently across rows.</li>
-      <li><strong>Shuffle (Row Mixing):</strong> Breaks horizontal correlations across sensitive data by shuffling row order within a single column.</li>
-      <li><strong>Keep As-Is:</strong> Preserves the column exactly as uploaded.</li>
-    </ul>
-
-    <h2>Frequently Asked Questions (FAQ)</h2>
-    <div class="faq-block">
-      <h3>Is it secure to upload corporate files to this tool?</h3>
-      <p>This application is static and operates entirely within client-side memory using your browser's local sandbox. Your file is parsed directly in your device's memory using HTML5 file handles and is never transmitted to a remote server.</p>
-    </div>
-    <div class="faq-block">
-      <h3>Can I edit a CSV file without Excel?</h3>
-      <p>Yes. This tool works as a full CSV editor in your browser — you can rename headers, add or remove rows and columns, sort, search, and copy/paste cells without installing any spreadsheet software.</p>
-    </div>
-    <div class="faq-block">
-      <h3>Does the search box filter the exported file too?</h3>
-      <p>No — search only affects what you see in the live preview. Downloads always include the full dataset (with your chosen masking rules applied), regardless of the current search or sort.</p>
-    </div>
   </article>
-
 </div>
 
 <div id="toastHost"></div>
@@ -829,1030 +801,902 @@
 <div id="deleteModal" class="modal-overlay hidden">
   <div class="modal-card">
     <div class="modal-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
     </div>
-    <p class="modal-title">Delete this column?</p>
-    <p class="modal-body">Remove <strong id="deleteModalColName"></strong> and its data from every row. You can't undo this from the button below, but Ctrl+Z will bring it back.</p>
+    <div class="modal-title" id="modalTitle">Delete Row</div>
+    <div class="modal-body" id="modalBody">Are you sure you want to delete this item? This action can be undone via Undo (Ctrl+Z).</div>
     <div class="modal-actions">
-      <button class="btn-modal-cancel" id="deleteModalCancel">Cancel</button>
-      <button class="btn-modal-delete" id="deleteModalConfirm">Delete</button>
+      <button class="btn-modal-cancel" id="modalCancelBtn">Cancel</button>
+      <button class="btn-modal-delete" id="modalConfirmBtn">Delete</button>
     </div>
   </div>
 </div>
 
 <script>
-let columns = [];          // {id, name, type, action, format}
-let rawRows = [];          // array of {colId: value}
-let originalFileNameBase = 'data_sanitized';
-let sessionShuffledIndices = {};
-let dragSourceColId = null;
-let colIdCounter = 0;
+let originalFileNameBase = 'sanitized_export';
+let columns = [];
+let rows = [];
+let currentSort = { colIndex: null, direction: 'asc' };
+let historyStack = [];
+let historyIndex = -1;
 
-// New state
-let undoStack = [];
-let redoStack = [];
-const MAX_UNDO = 50;
-let sortState = { colId: null, dir: null }; // dir: 'asc' | 'desc' | null
-let searchQuery = '';
-let selAnchor = null; // {viewRow, colIdx}
-let selEnd = null;
-let currentPreviewRows = []; // rows currently rendered, each carries __idx (index into rawRows)
-
-function nextColId(){ colIdCounter += 1; return 'c' + colIdCounter; }
+// Grid selection variables
+let selectStartCell = null;
+let selectedCellsRange = null;
 
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
 const workspace = document.getElementById('workspace');
 const colGrid = document.getElementById('colGrid');
 const previewTable = document.getElementById('previewTable');
-const previewCount = document.getElementById('previewCount');
-const fullRowCount = document.getElementById('fullRowCount');
 const downloadBtn = document.getElementById('downloadBtn');
-const formatSelect = document.getElementById('formatSelect');
-const resetBtn = document.getElementById('resetBtn');
-const clearFileBtn = document.getElementById('clearFileBtn');
-const themeToggle = document.getElementById('themeToggle');
-const statusEyebrow = document.getElementById('statusEyebrow');
-const toastHost = document.getElementById('toastHost');
 const undoBtn = document.getElementById('undoBtn');
 const redoBtn = document.getElementById('redoBtn');
 const searchInput = document.getElementById('searchInput');
 const searchClearBtn = document.getElementById('searchClearBtn');
 const searchMatchCount = document.getElementById('searchMatchCount');
 
-function showToast(message){
-  const el = document.createElement('div');
-  el.className = 'toast';
-  el.textContent = message;
-  toastHost.appendChild(el);
-  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .25s'; setTimeout(() => el.remove(), 250); }, 3800);
+// Dark/Light Theme setup
+const themeToggle = document.getElementById('themeToggle');
+let currentTheme = localStorage.getItem('theme') || 'dark';
+function applyTheme(theme) {
+  if (theme === 'light') {
+    document.body.classList.add('light-theme');
+    themeToggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg> Light Mode';
+  } else {
+    document.body.classList.remove('light-theme');
+    themeToggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> Dark Mode';
+  }
 }
-
-const deleteModal = document.getElementById('deleteModal');
-const deleteModalColName = document.getElementById('deleteModalColName');
-const deleteModalCancel = document.getElementById('deleteModalCancel');
-const deleteModalConfirm = document.getElementById('deleteModalConfirm');
-let pendingDeleteColId = null;
-
-function requestDeleteColumn(colId){
-  const col = getColumn(colId);
-  if (!col) return;
-  pendingDeleteColId = colId;
-  deleteModalColName.textContent = `"${col.name}"`;
-  deleteModal.classList.remove('hidden');
-  deleteModalConfirm.focus();
-}
-function closeDeleteModal(){
-  deleteModal.classList.add('hidden');
-  pendingDeleteColId = null;
-}
-deleteModalCancel.addEventListener('click', closeDeleteModal);
-deleteModal.addEventListener('click', e => { if (e.target === deleteModal) closeDeleteModal(); });
-deleteModalConfirm.addEventListener('click', () => {
-  if (pendingDeleteColId) deleteSpecificColumn(pendingDeleteColId);
-  closeDeleteModal();
+applyTheme(currentTheme);
+themeToggle.addEventListener('click', () => {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('theme', currentTheme);
+  applyTheme(currentTheme);
 });
 
-const SUN_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
-const MOON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
-const GRIP_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="6" r="1.6"/><circle cx="8" cy="12" r="1.6"/><circle cx="8" cy="18" r="1.6"/><circle cx="16" cy="6" r="1.6"/><circle cx="16" cy="12" r="1.6"/><circle cx="16" cy="18" r="1.6"/></svg>';
-const TRASH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>';
-const PLUS_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>';
-const SORT_NONE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>';
-const SORT_ASC_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>';
-const SORT_DESC_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>';
-
-function setTheme(isLight){
-  document.body.classList.toggle('light-theme', isLight);
-  themeToggle.innerHTML = (isLight ? SUN_ICON : MOON_ICON) + ` <span style="margin-left:4px;">${isLight ? 'Light' : 'Dark'}</span>`;
-}
-themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('light-theme')));
-setTheme(false);
-
-const TYPE_ACTION = { email: 'anonymize', name: 'anonymize', phone: 'redact', id: 'redact', generic: 'keep' };
-const FORMAT_HINT = { email: 'text', name: 'text', phone: 'text', id: 'text', generic: 'auto' };
-
-function detectColumnType(header, samples){
-  const h = header.toLowerCase().trim();
-  const nonEmpty = samples.filter(v => v !== undefined && v !== null && String(v).trim() !== '');
-  const emailLike = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v).trim());
-  const phoneLike = v => {
-    const s = String(v).trim();
-    return /^\+?[\d\s().-]{7,}$/.test(s) && /[\s().+-]/.test(s);
-  };
-  const idLike = v => /^[A-Za-z0-9-]{6,}$/.test(String(v).trim()) && /\d/.test(v);
-
-  if (/e-?mail/.test(h)) return 'email';
-  if (/^(full[_ ]?)?name$|first[_ ]?name|last[_ ]?name|surname/.test(h)) return 'name';
-  if (/^id$|_id$|national[_ ]?id|passport|ssn|cin\b|card[_ ]?number/.test(h)) return 'id';
-  if (/phone|mobile|tel(ephone)?$/.test(h)) return 'phone';
-
-  if (nonEmpty.length && nonEmpty.every(emailLike)) return 'email';
-  if (nonEmpty.length && nonEmpty.every(phoneLike)) return 'phone';
-  if (nonEmpty.length >= 3 && nonEmpty.every(idLike) && !nonEmpty.every(v => /^\d+$/.test(v))) return 'id';
-  return 'generic';
+// Toast system
+function showToast(msg) {
+  const host = document.getElementById('toastHost');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  host.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
 }
 
-function detectFormatGuess(samples){
-  const nonEmpty = samples.filter(v => v !== undefined && v !== null && String(v).trim() !== '');
-  if (!nonEmpty.length) return 'auto';
-  const isNum = v => !isNaN(parseFloat(String(v).replace(/,/g,''))) && isFinite(String(v).replace(/,/g,''));
-  const isDate = v => !isNaN(Date.parse(v)) && /\d{4}|\d{1,2}[\/\-]\d{1,2}/.test(String(v));
-  if (nonEmpty.every(isNum)) return 'number';
-  if (nonEmpty.every(isDate)) return 'date';
-  return 'auto';
+// Modal dialog state
+let modalActionResolve = null;
+const deleteModal = document.getElementById('deleteModal');
+function showConfirmModal(title, message) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = message;
+  deleteModal.classList.remove('hidden');
+  return new Promise((resolve) => { modalActionResolve = resolve; });
 }
+document.getElementById('modalCancelBtn').addEventListener('click', () => {
+  deleteModal.classList.add('hidden');
+  if(modalActionResolve) modalActionResolve(false);
+});
+document.getElementById('modalConfirmBtn').addEventListener('click', () => {
+  deleteModal.classList.add('hidden');
+  if(modalActionResolve) modalActionResolve(true);
+});
 
-/* ---------------- File input / drag-drop ---------------- */
-
+// Drag & drop file event triggers
 dropzone.addEventListener('click', () => fileInput.click());
-dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag'); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag'); });
 dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
-dropzone.addEventListener('drop', e => {
+dropzone.addEventListener('drop', (e) => {
   e.preventDefault();
   dropzone.classList.remove('drag');
   if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
 });
-fileInput.addEventListener('change', e => {
+fileInput.addEventListener('change', (e) => {
   if (e.target.files.length) handleFile(e.target.files[0]);
 });
 
-function handleFile(file){
+function handleFile(file) {
+  const idx = file.name.lastIndexOf('.');
+  originalFileNameBase = idx !== -1 ? file.name.substring(0, idx) : file.name;
   const ext = file.name.split('.').pop().toLowerCase();
-  originalFileNameBase = file.name.replace(/\.[^/.]+$/, '') + '_sanitized';
 
-  if (ext === 'csv') {
-    const reader = new FileReader();
-    reader.onload = e => parseCSV(e.target.result);
-    reader.onerror = () => showToast('Could not read that file.');
-    reader.readAsText(file, 'UTF-8');
-  } else if (ext === 'xlsx' || ext === 'xls') {
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const wb = XLSX.read(data, { type: 'array' });
-        const firstSheet = wb.Sheets[wb.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(firstSheet, { defval: '', raw: false });
-        loadParsedData(rows);
-      } catch (err) {
-        showToast('Failed to read spreadsheet: ' + err.message);
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      if (ext === 'csv') {
+        parseCSV(e.target.result);
+      } else if (ext === 'json') {
+        parseJSON(e.target.result);
+      } else if (ext === 'xlsx' || ext === 'xls') {
+        parseExcel(e.target.result);
+      } else {
+        showToast("Unsupported file extension layout.");
       }
-    };
-    reader.onerror = () => showToast('Could not read that file.');
+    } catch(err) {
+      showToast(`Parsing failure: ${err.message}`);
+    }
+  };
+
+  if (ext === 'xlsx' || ext === 'xls') {
     reader.readAsArrayBuffer(file);
-  } else if (ext === 'json') {
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        let data = JSON.parse(e.target.result);
-        if (!Array.isArray(data)) {
-          if (data && typeof data === 'object') data = [data];
-          else throw new Error('JSON must be an array of objects.');
-        }
-        loadParsedData(data);
-      } catch (err) {
-        showToast('Failed to parse JSON: ' + err.message);
-      }
-    };
-    reader.onerror = () => showToast('Could not read that file.');
-    reader.readAsText(file, 'UTF-8');
   } else {
-    showToast('Unsupported file type. Please upload a .csv, .xlsx, .xls, or .json file.');
+    reader.readAsText(file);
   }
 }
 
-function parseCSV(text){
-  const result = Papa.parse(text, { header: true, skipEmptyLines: true });
-  const parsedRows = result.data;
-  if (parsedRows.length === 0) {
-    showToast('The uploaded CSV appears to be completely empty.');
-    return;
-  }
-  loadParsedData(parsedRows, result.meta.fields || []);
-}
+function parseCSV(text) {
+  const res = Papa.parse(text, { skipEmptyLines: 'greedy', header: false });
+  if (!res.data || res.data.length === 0) throw new Error("File context is empty.");
+  
+  const headerRow = res.data[0];
+  columns = headerRow.map((name, i) => ({
+    id: 'col_' + Date.now() + '_' + i,
+    name: (name || '').trim() || `Column_${i+1}`,
+    action: 'keep', // Default to keep explicitly as requested
+    dataType: 'text'
+  }));
 
-function loadParsedData(parsedRows, headerHint){
-  if (!parsedRows || !parsedRows.length) {
-    showToast('The uploaded file appears to be empty.');
-    return;
-  }
-
-  let parsedHeaders = (headerHint && headerHint.length) ? headerHint.slice() : Array.from(
-    parsedRows.reduce((set, row) => { Object.keys(row).forEach(k => set.add(k)); return set; }, new Set())
-  );
-  if (!parsedHeaders.length) {
-    showToast('Could not find any columns in that file.');
-    return;
-  }
-
-  colIdCounter = 0;
-  columns = [];
-  sessionShuffledIndices = {};
-  undoStack = [];
-  redoStack = [];
-  sortState = { colId: null, dir: null };
-  searchQuery = '';
-  selAnchor = null;
-  selEnd = null;
-  if (searchInput) searchInput.value = '';
-  if (searchClearBtn) searchClearBtn.classList.remove('show');
-
-  const nameToId = {};
-  parsedHeaders.forEach(h => {
-    const id = nextColId();
-    nameToId[h] = id;
-    const samples = parsedRows.slice(0, 20).map(r => r[h]);
-    const type = detectColumnType(h, samples);
-    const format = type === 'generic' ? detectFormatGuess(samples) : 'text';
-    columns.push({ id, name: h, type, action: TYPE_ACTION[type], format });
-  });
-
-  rawRows = parsedRows.map(row => {
-    const newRow = {};
-    parsedHeaders.forEach(h => {
-      const v = row[h];
-      newRow[nameToId[h]] = (v === undefined || v === null) ? '' : v;
+  rows = res.data.slice(1).map(r => {
+    const rowObj = {};
+    columns.forEach((c, idx) => {
+      rowObj[c.id] = r[idx] !== undefined ? String(r[idx]) : '';
     });
-    return newRow;
+    return rowObj;
   });
 
-  updateRowCountsUI();
-  buildColumnGrid();
-  renderPreview();
-  updateUndoRedoButtons();
+  initWorkspace();
+}
 
-  dropzone.classList.add('hidden');
+function parseExcel(buffer) {
+  const workbook = XLSX.read(buffer, { type: 'array' });
+  const firstSheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[firstSheetName];
+  const sheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+  
+  if (!sheetData || sheetData.length === 0) throw new Error("Excel sheet is empty.");
+  
+  const headerRow = sheetData[0];
+  columns = headerRow.map((name, i) => ({
+    id: 'col_' + Date.now() + '_' + i,
+    name: String(name || '').trim() || `Column_${i+1}`,
+    action: 'keep', // Default to keep explicitly as requested
+    dataType: 'text'
+  }));
+
+  rows = sheetData.slice(1).map(r => {
+    const rowObj = {};
+    columns.forEach((c, idx) => {
+      rowObj[c.id] = r[idx] !== undefined ? String(r[idx]) : '';
+    });
+    return rowObj;
+  });
+
+  initWorkspace();
+}
+
+function flattenObject(obj, prefix = '') {
+  let res = {};
+  for (let k in obj) {
+    if (obj.hasOwnProperty(k)) {
+      const val = obj[k];
+      const newKey = prefix ? `${prefix}.${k}` : k;
+      if (val && typeof val === 'object' && !Array.isArray(val)) {
+        Object.assign(res, flattenObject(val, newKey));
+      } else {
+        res[newKey] = val === null ? '' : String(val);
+      }
+    }
+  }
+  return res;
+}
+
+function parseJSON(text) {
+  let data = JSON.parse(text);
+  if (!Array.isArray(data)) {
+    if (typeof data === 'object') data = [data];
+    else throw new Error("Invalid top-level JSON structure data arrays structural requirements.");
+  }
+  if (data.length === 0) throw new Error("JSON document has empty content structural rules.");
+
+  let flatRows = data.map(item => flattenObject(item));
+  let discoveredKeys = new Set();
+  flatRows.forEach(r => Object.keys(r).forEach(k => discoveredKeys.add(k)));
+
+  const uniqueCols = Array.from(discoveredKeys);
+  columns = uniqueCols.map((name, i) => ({
+    id: 'col_' + Date.now() + '_' + i,
+    name: name,
+    action: 'keep', // Default to keep explicitly as requested
+    dataType: 'text'
+  }));
+
+  rows = flatRows.map(r => {
+    const rowObj = {};
+    columns.forEach(c => {
+      rowObj[c.id] = r[c.name] !== undefined ? r[c.name] : '';
+    });
+    return rowObj;
+  });
+
+  initWorkspace();
+}
+
+function initWorkspace() {
+  historyStack = [];
+  historyIndex = -1;
+  currentSort = { colIndex: null, direction: 'asc' };
+  searchInput.value = '';
+  
+  // Set accurate data types organically without toggling redactions
+  columns.forEach(c => {
+    let isNum = true, isDate = false;
+    let checked = 0;
+    for(let i=0; i<Math.min(rows.length, 30); i++) {
+      let val = rows[i][c.id];
+      if(!val) continue;
+      checked++;
+      if(isNaN(val)) isNum = false;
+    }
+    if(checked > 0 && isNum) c.dataType = 'number';
+  });
+
+  document.getElementById('statusEyebrow').textContent = ` / ${originalFileNameBase}`;
+  saveState();
+  renderWorkspace();
   workspace.classList.remove('hidden');
+  dropzone.classList.add('hidden');
 }
 
-function updateRowCountsUI() {
-  statusEyebrow.textContent = `/ ${rawRows.length} rows / local sandbox`;
-  fullRowCount.textContent = `${rawRows.length} rows total`;
-}
+function saveState() {
+  const currentSnapshot = {
+    columns: JSON.parse(JSON.stringify(columns)),
+    rows: JSON.parse(JSON.stringify(rows)),
+    currentSort: { ...currentSort }
+  };
 
-function getColumn(id){ return columns.find(c => c.id === id); }
-
-/* ---------------- Undo / redo ---------------- */
-
-function snapshotState(){
-  return JSON.stringify({ columns, rawRows, sessionShuffledIndices, sortState });
-}
-function pushUndo(){
-  undoStack.push(snapshotState());
-  if (undoStack.length > MAX_UNDO) undoStack.shift();
-  redoStack = [];
+  if (historyIndex < historyStack.length - 1) {
+    historyStack = historyStack.slice(0, historyIndex + 1);
+  }
+  historyStack.push(currentSnapshot);
+  historyIndex++;
   updateUndoRedoButtons();
 }
-function restoreState(json){
-  const state = JSON.parse(json);
-  columns = state.columns;
-  rawRows = state.rawRows;
-  sessionShuffledIndices = state.sessionShuffledIndices || {};
-  sortState = state.sortState || { colId: null, dir: null };
-}
-function undo(){
-  if (!undoStack.length) return;
-  redoStack.push(snapshotState());
-  const prev = undoStack.pop();
-  restoreState(prev);
-  selAnchor = null; selEnd = null;
-  buildColumnGrid();
-  renderPreview();
-  updateRowCountsUI();
-  updateUndoRedoButtons();
-  showToast('Undid last change.');
-}
-function redo(){
-  if (!redoStack.length) return;
-  undoStack.push(snapshotState());
-  const next = redoStack.pop();
-  restoreState(next);
-  selAnchor = null; selEnd = null;
-  buildColumnGrid();
-  renderPreview();
-  updateRowCountsUI();
-  updateUndoRedoButtons();
-  showToast('Redid change.');
-}
-function updateUndoRedoButtons(){
-  undoBtn.disabled = undoStack.length === 0;
-  redoBtn.disabled = redoStack.length === 0;
-}
-undoBtn.addEventListener('click', undo);
-redoBtn.addEventListener('click', redo);
 
-/* ---------------- Column config grid ---------------- */
+function loadState(snapshot) {
+  columns = JSON.parse(JSON.stringify(snapshot.columns));
+  rows = JSON.parse(JSON.stringify(snapshot.rows));
+  currentSort = { ...snapshot.currentSort };
+  renderWorkspace();
+}
 
-function buildColumnGrid(){
+function updateUndoRedoButtons() {
+  undoBtn.disabled = historyIndex <= 0;
+  redoBtn.disabled = historyIndex >= historyStack.length - 1;
+}
+
+undoBtn.addEventListener('click', () => {
+  if (historyIndex > 0) {
+    historyIndex--;
+    loadState(historyStack[historyIndex]);
+    updateUndoRedoButtons();
+  }
+});
+
+redoBtn.addEventListener('click', () => {
+  if (historyIndex < historyStack.length - 1) {
+    historyIndex++;
+    loadState(historyStack[historyIndex]);
+    updateUndoRedoButtons();
+  }
+});
+
+function renderWorkspace() {
+  renderColSettingsGrid();
+  renderLivePreviewTable();
+  document.getElementById('fullRowCount').textContent = `${rows.length} records total structural rows size metrics.`;
+}
+
+function renderColSettingsGrid() {
   colGrid.innerHTML = '';
-  columns.forEach(col => {
-    const sample = rawRows[0] ? rawRows[0][col.id] : '';
-    const tagHtml = col.type === 'generic' ? '' : `<span class="type-tag detected">${col.type}</span>`;
+  columns.forEach((c, index) => {
     const row = document.createElement('div');
     row.className = 'col-row';
+
+    const sampleData = rows.slice(0, 3).map(r => r[c.id]).filter(Boolean).join(', ') || 'Empty';
+    const tagClass = c.dataType !== 'text' ? 'type-tag detected' : 'type-tag';
+
     row.innerHTML = `
-      <div class="col-name">${escapeHtml(col.name)}${tagHtml}</div>
-      <div class="col-sample">${escapeHtml(sample || '—')}</div>
-      <select class="format-select" data-col-id="${col.id}">
-        <option value="auto">Auto</option>
-        <option value="text">Text</option>
-        <option value="number">Number</option>
-        <option value="date">Date</option>
-      </select>
-      <select class="action-select" data-col-id="${col.id}">
-        <option value="keep">Keep as-is</option>
-        <option value="anonymize">Anonymize</option>
-        <option value="shuffle">Shuffle</option>
-        <option value="redact">Redact</option>
-      </select>
+      <div class="col-name">
+        <span class="${tagClass}">${c.dataType}</span>
+        <span style="overflow:hidden;text-overflow:ellipsis;" title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</span>
+      </div>
+      <div class="col-sample" title="${escapeHtml(sampleData)}">${escapeHtml(sampleData)}</div>
+      <div>
+        <select class="type-select" data-id="${c.id}">
+          <option value="text" ${c.dataType==='text'?'selected':''}>Text Display</option>
+          <option value="number" ${c.dataType==='number'?'selected':''}>Number Format</option>
+        </select>
+      </div>
+      <div>
+        <select class="action-select" data-id="${c.id}">
+          <option value="keep" ${c.action==='keep'?'selected':''}>Keep As-Is</option>
+          <option value="anonymize" ${c.action==='anonymize'?'selected':''}>Anonymize</option>
+          <option value="shuffle" ${c.action==='shuffle'?'selected':''}>Shuffle Column</option>
+          <option value="redact" ${c.action==='redact'?'selected':''}>Redact Column</option>
+        </select>
+      </div>
     `;
-    row.querySelector('.action-select').value = col.action;
-    row.querySelector('.format-select').value = col.format || 'auto';
     colGrid.appendChild(row);
   });
 
   colGrid.querySelectorAll('.action-select').forEach(sel => {
-    sel.addEventListener('change', e => {
-      const col = getColumn(e.target.dataset.colId);
-      if (col) { pushUndo(); col.action = e.target.value; }
-      renderPreview();
+    sel.addEventListener('change', (e) => {
+      const cId = e.target.getAttribute('data-id');
+      const col = columns.find(c => c.id === cId);
+      if(col) {
+        col.action = e.target.value;
+        saveState();
+        renderLivePreviewTable();
+      }
     });
   });
-  colGrid.querySelectorAll('.format-select').forEach(sel => {
-    sel.addEventListener('change', e => {
-      const col = getColumn(e.target.dataset.colId);
-      if (col) { pushUndo(); col.format = e.target.value; }
-      renderPreview();
+
+  colGrid.querySelectorAll('.type-select').forEach(sel => {
+    sel.addEventListener('change', (e) => {
+      const cId = e.target.getAttribute('data-id');
+      const col = columns.find(c => c.id === cId);
+      if(col) {
+        col.dataType = e.target.value;
+        saveState();
+        renderLivePreviewTable();
+      }
     });
   });
 }
 
-document.querySelectorAll('.macro-btn').forEach(button => {
-  button.addEventListener('click', (e) => {
-    const targetAction = e.target.dataset.action;
-    pushUndo();
-    columns.forEach(col => { col.action = targetAction; });
-    colGrid.querySelectorAll('.action-select').forEach(select => { select.value = targetAction; });
-    renderPreview();
+document.querySelectorAll('.macro-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const action = btn.getAttribute('data-action');
+    columns.forEach(c => c.action = action);
+    saveState();
+    renderWorkspace();
+    showToast(`Bulk configuration toggled: set all items to ${action.toUpperCase()}.`);
   });
 });
 
-/* ---------------- Sanitization core ---------------- */
+document.getElementById('resetBtn').addEventListener('click', () => {
+  columns.forEach(c => c.action = 'keep'); // Reset strictly resets to keep configuration
+  saveState();
+  renderWorkspace();
+  showToast("Reverted and cleared active column actions safely.");
+});
 
-function generateShuffledMap(colId, totalRows) {
-  if (sessionShuffledIndices[colId]) return sessionShuffledIndices[colId];
-  const idx = Array.from({ length: totalRows }, (_, i) => i);
-  for (let i = idx.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [idx[i], idx[j]] = [idx[j], idx[i]];
+document.getElementById('clearFileBtn').addEventListener('click', async () => {
+  const confirmClear = await showConfirmModal("Clear Active Workspace?", "Are you confident you want to eject and remove the current dataset profile?");
+  if (confirmClear) {
+    columns = [];
+    rows = [];
+    workspace.classList.add('hidden');
+    dropzone.classList.remove('hidden');
+    fileInput.value = '';
+    showToast("Workspace flushed cleanly.");
   }
-  sessionShuffledIndices[colId] = idx;
-  return idx;
-}
+});
 
-function buildSanitizedRowsForIndices(indices){
-  const runAnonMaps = {};
-  const totalRows = rawRows.length;
-
-  const shuffleCache = {};
-  columns.forEach(col => {
-    if (col.action === 'shuffle') shuffleCache[col.id] = generateShuffledMap(col.id, totalRows);
-  });
-
-  const output = [];
-  indices.forEach(i => {
-    const row = rawRows[i];
-    const newRow = { __idx: i };
-
-    columns.forEach(col => {
-      const action = col.action;
-      const val = row[col.id];
-
-      if (val === undefined || val === null || String(val).trim() === '') {
-        newRow[col.id] = '';
-        return;
-      }
-
-      if (action === 'keep') {
-        newRow[col.id] = val;
-      } else if (action === 'anonymize') {
-        if (!runAnonMaps[col.id]) runAnonMaps[col.id] = { map: new Map(), counter: 0 };
-        const store = runAnonMaps[col.id];
-        if (!store.map.has(val)) {
-          store.counter++;
-          const n = String(store.counter).padStart(3, '0');
-          if (typeof val === 'string' && val.includes('@')) {
-            const parts = val.split('@');
-            store.map.set(val, `user${n}@${parts[1] || 'example.com'}`);
-          } else {
-            store.map.set(val, `Value_${n}`);
-          }
-        }
-        newRow[col.id] = store.map.get(val);
-      } else if (action === 'redact') {
-        if (typeof val === 'string' && val.includes('@')) {
-          const splitEmail = val.split('@');
-          newRow[col.id] = '██████' + '@' + (splitEmail[1] || 'domain.com');
-        } else {
-          newRow[col.id] = '████████';
-        }
-      } else if (action === 'shuffle') {
-        const structuralIndex = shuffleCache[col.id][i];
-        newRow[col.id] = rawRows[structuralIndex] ? rawRows[structuralIndex][col.id] : '';
-      }
-    });
-    output.push(newRow);
-  });
-  return output;
-}
-
-function buildSanitizedRows(limitCount = null){
-  const totalRows = rawRows.length;
-  const processLimit = limitCount ? Math.min(limitCount, totalRows) : totalRows;
-  const indices = Array.from({ length: processLimit }, (_, i) => i);
-  return buildSanitizedRowsForIndices(indices);
-}
-
-/* ---------------- Sort / search (view only) ---------------- */
-
-function compareValues(a, b, format){
-  const sa = (a === undefined || a === null) ? '' : String(a);
-  const sb = (b === undefined || b === null) ? '' : String(b);
-  if (sa === '' && sb === '') return 0;
-  if (sa === '') return 1;
-  if (sb === '') return -1;
-  if (format === 'number') {
-    const na = parseFloat(sa.replace(/,/g,'')), nb = parseFloat(sb.replace(/,/g,''));
-    if (!isNaN(na) && !isNaN(nb)) return na - nb;
-  }
-  if (format === 'date') {
-    const da = Date.parse(sa), db = Date.parse(sb);
-    if (!isNaN(da) && !isNaN(db)) return da - db;
-  }
-  return sa.localeCompare(sb, undefined, { numeric: true, sensitivity: 'base' });
-}
-
-function getViewIndices(){
-  let indices = rawRows.map((_, i) => i);
-
-  if (searchQuery.trim()) {
-    const q = searchQuery.trim().toLowerCase();
-    indices = indices.filter(i => {
-      return columns.some(col => String(rawRows[i][col.id] ?? '').toLowerCase().includes(q));
-    });
-  }
-
-  if (sortState.colId && sortState.dir) {
-    const col = getColumn(sortState.colId);
-    if (col) {
-      indices = indices.slice().sort((a, b) => {
-        const cmp = compareValues(rawRows[a][col.id], rawRows[b][col.id], col.format);
-        return sortState.dir === 'asc' ? cmp : -cmp;
-      });
+function getProcessedValue(col, val, rowIndex, cachedMappings) {
+  if (!val) return '';
+  if (col.action === 'keep') return val;
+  
+  if (col.action === 'redact') {
+    if (val.includes('@')) {
+      const parts = val.split('@');
+      return '████@' + parts[1];
     }
+    return '████████';
   }
 
-  return indices;
-}
-
-function formatDisplayValue(val, format){
-  if (val === undefined || val === null || val === '') return '';
-  if (format === 'number') {
-    const n = parseFloat(String(val).replace(/,/g,''));
-    if (!isNaN(n)) return new Intl.NumberFormat().format(n);
+  if (col.action === 'anonymize') {
+    if (!cachedMappings[col.id]) cachedMappings[col.id] = {};
+    if (!cachedMappings[col.id][val]) {
+      const size = Object.keys(cachedMappings[col.id]).length + 1;
+      const pad = String(size).padStart(3, '0');
+      if (val.includes('@')) {
+        const parts = val.split('@');
+        cachedMappings[col.id][val] = `user${pad}@${parts[1]}`;
+      } else {
+        cachedMappings[col.id][val] = `Value_${pad}`;
+      }
+    }
+    return cachedMappings[col.id][val];
   }
-  if (format === 'date') {
-    const d = new Date(val);
-    if (!isNaN(d.getTime())) return d.toLocaleDateString();
+
+  if (col.action === 'shuffle') {
+    if (!cachedMappings[col.id]) {
+      const allVals = rows.map(r => r[col.id]);
+      for (let i = allVals.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allVals[i], allVals[j]] = [allVals[j], allVals[i]];
+      }
+      cachedMappings[col.id] = allVals;
+    }
+    return cachedMappings[col.id][rowIndex] !== undefined ? cachedMappings[col.id][rowIndex] : val;
   }
   return val;
 }
 
-searchInput.addEventListener('input', e => {
-  searchQuery = e.target.value;
-  searchClearBtn.classList.toggle('show', searchQuery.length > 0);
-  selAnchor = null; selEnd = null;
-  renderPreview();
-});
-searchClearBtn.addEventListener('click', () => {
-  searchQuery = '';
-  searchInput.value = '';
-  searchClearBtn.classList.remove('show');
-  renderPreview();
-  searchInput.focus();
-});
+function renderLivePreviewTable() {
+  previewTable.innerHTML = '';
+  if(columns.length === 0) return;
 
-function cycleSort(colId){
-  if (sortState.colId !== colId) {
-    sortState = { colId, dir: 'asc' };
-  } else if (sortState.dir === 'asc') {
-    sortState = { colId, dir: 'desc' };
-  } else {
-    sortState = { colId: null, dir: null };
+  const anonymizationCache = {};
+  const query = searchInput.value.toLowerCase().trim();
+  let matchedRows = [];
+
+  rows.forEach((r, originalIndex) => {
+    let matches = !query;
+    if (query) {
+      for (let i = 0; i < columns.length; i++) {
+        const cellRawVal = (r[columns[i].id] || '').toLowerCase();
+        if (cellRawVal.includes(query)) {
+          matches = true;
+          break;
+        }
+      }
+    }
+    if (matches) {
+      matchedRows.push({ rowData: r, originalIndex: originalIndex });
+    }
+  });
+
+  if (currentSort.colIndex !== null) {
+    const sCol = columns[currentSort.colIndex];
+    const dir = currentSort.direction === 'asc' ? 1 : -1;
+    matchedRows.sort((a, b) => {
+      let vA = a.rowData[sCol.id] || '';
+      let vB = b.rowData[sCol.id] || '';
+      if (sCol.dataType === 'number') {
+        let nA = parseFloat(vA);
+        let nB = parseFloat(vB);
+        if (!isNaN(nA) && !isNaN(nB)) return (nA - nB) * dir;
+      }
+      return vA.localeCompare(vB) * dir;
+    });
   }
-  renderPreview();
-}
 
-/* ---------------- Preview rendering ---------------- */
+  // Generate Table Header View Element Component Structure
+  const thead = document.createElement('thead');
+  const hTr = document.createElement('tr');
+  
+  const cornerTh = document.createElement('th');
+  cornerTh.className = 'row-gutter-head';
+  hTr.appendChild(cornerTh);
 
-function renderPreview(){
-  const displayLimit = 100;
-  const viewIndices = getViewIndices();
-  const limited = viewIndices.slice(0, displayLimit);
-  currentPreviewRows = buildSanitizedRowsForIndices(limited);
+  columns.forEach((c, index) => {
+    const th = document.createElement('th');
+    th.setAttribute('draggable', 'true');
+    th.setAttribute('data-index', index);
 
-  if (searchQuery.trim()) {
-    searchMatchCount.textContent = `${viewIndices.length} match${viewIndices.length === 1 ? '' : 'es'}`;
-  } else {
-    searchMatchCount.textContent = '';
-  }
-  previewCount.textContent = `— showing up to ${displayLimit} rows${searchQuery.trim() || sortState.colId ? ' (filtered/sorted view)' : ''}`;
+    let activeSortClass = '';
+    let sortIconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>`;
+    if (currentSort.colIndex === index) {
+      activeSortClass = ' active';
+      if (currentSort.direction === 'desc') {
+        sortIconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`;
+      }
+    }
 
-  let thead = '<thead><tr><th class="row-gutter-head"></th>' + columns.map((col, index) => {
-    const isSorted = sortState.colId === col.id;
-    const sortIcon = isSorted ? (sortState.dir === 'asc' ? SORT_ASC_ICON : SORT_DESC_ICON) : SORT_NONE_ICON;
-    return `<th draggable="false" data-index="${index}" data-col-id="${col.id}">
+    th.innerHTML = `
       <div class="th-wrap">
-        <span class="drag-handle" draggable="true" data-index="${index}" title="Drag to reorder">${GRIP_ICON}</span>
-        <button class="sort-btn${isSorted ? ' active' : ''}" onclick="cycleSort('${col.id}'); event.stopPropagation();" title="Sort by this column">${sortIcon}</button>
-        <span contenteditable="true" class="header-text-span" data-col-id="${col.id}">${escapeHtml(col.name)}</span>
+        <div class="drag-handle" title="Drag to rearrange column alignment patterns.">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+        </div>
+        <span class="header-text-span" contenteditable="true" data-index="${index}">${escapeHtml(c.name)}</span>
         <div class="th-controls">
-          <button class="col-insert-btn" onclick="gridInsertColumnAt(${index + 1}); event.stopPropagation();" title="Insert column after">${PLUS_ICON}</button>
-          ${columns.length > 1 ? `<button class="col-trash-btn" onclick="requestDeleteColumn('${col.id}')" title="Delete this column">${TRASH_ICON}</button>` : ''}
+          <button class="sort-btn${activeSortClass}" data-index="${index}" title="Sort Column Index Matrix Data">${sortIconSvg}</button>
+          <button class="col-insert-btn" data-index="${index}" title="Insert Blank Side Column Item Structure.">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <button class="col-trash-btn" data-index="${index}" title="Purge column node safely.">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
         </div>
       </div>
-    </th>`;
-  }).join('') + '</tr></thead>';
-
-  let tbody = '<tbody>' + currentPreviewRows.map((row, viewRow) => {
-    const origIdx = row.__idx;
-    const gutter = `<td class="row-gutter">
-      <span class="row-num">${origIdx + 1}</span>
-      <button class="row-del-btn" onclick="deleteRowAt(${origIdx})" title="Delete row">${TRASH_ICON}</button>
-    </td>`;
-    return '<tr>' + gutter + columns.map((col, colIdx) => {
-      const action = col.action;
-      const rawVal = row[col.id] ?? '';
-      let cls = '';
-      if (action === 'redact') cls = 'cell-redact';
-      else if (action === 'shuffle') cls = 'cell-shuffle';
-      else if (action === 'anonymize') cls = 'cell-anon';
-      const displayVal = action === 'keep' ? formatDisplayValue(rawVal, col.format) : rawVal;
-      const selected = isCellSelected(viewRow, colIdx) ? ' cell-selected' : '';
-
-      return `<td class="${cls}${selected}" data-view-row="${viewRow}" data-row-orig="${origIdx}" data-col-id="${col.id}" data-col-idx="${colIdx}">${escapeHtml(String(displayVal))}</td>`;
-    }).join('') + '</tr>';
-  }).join('')
-  + `<tr class="add-row-ghost" onclick="gridAddRow()">
-      <td colspan="${columns.length + 1}">
-        <span class="add-row-label">${PLUS_ICON} Add row</span>
-      </td>
-    </tr>`
-  + '</tbody>';
-
-  previewTable.innerHTML = thead + tbody;
-
-  setupDragAndDrop();
-  setupCellInteractions();
-
-  previewTable.querySelectorAll('thead .header-text-span').forEach(span => {
-    span.addEventListener('blur', e => {
-      const colId = e.target.dataset.colId;
-      const col = getColumn(colId);
-      if (!col) return;
-      const newName = e.target.textContent.trim();
-      if (newName && newName !== col.name) {
-        pushUndo();
-        col.name = newName;
-        buildColumnGrid();
-        renderPreview();
-      } else {
-        e.target.textContent = col.name;
-      }
-    });
-    span.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
-    });
+    `;
+    hTr.appendChild(th);
   });
-}
+  thead.appendChild(hTr);
+  previewTable.appendChild(thead);
 
-/* ---------------- Cell selection, editing, copy/paste ---------------- */
-
-function isCellSelected(viewRow, colIdx){
-  if (!selAnchor || !selEnd) return false;
-  const r1 = Math.min(selAnchor.viewRow, selEnd.viewRow), r2 = Math.max(selAnchor.viewRow, selEnd.viewRow);
-  const c1 = Math.min(selAnchor.colIdx, selEnd.colIdx), c2 = Math.max(selAnchor.colIdx, selEnd.colIdx);
-  return viewRow >= r1 && viewRow <= r2 && colIdx >= c1 && colIdx <= c2;
-}
-
-function applySelectionHighlight(){
-  previewTable.querySelectorAll('tbody td[data-view-row]').forEach(td => {
-    const vr = parseInt(td.dataset.viewRow);
-    const ci = parseInt(td.dataset.colIdx);
-    td.classList.toggle('cell-selected', isCellSelected(vr, ci));
-  });
-}
-
-function setupCellInteractions(){
-  previewTable.querySelectorAll('tbody td[data-view-row]').forEach(td => {
-    td.addEventListener('click', e => {
-      if (td.getAttribute('contenteditable') === 'true') return;
-      const viewRow = parseInt(td.dataset.viewRow);
-      const colIdx = parseInt(td.dataset.colIdx);
-      if (e.shiftKey && selAnchor) {
-        selEnd = { viewRow, colIdx };
-      } else {
-        selAnchor = { viewRow, colIdx };
-        selEnd = { viewRow, colIdx };
-      }
-      applySelectionHighlight();
-    });
-
-    td.addEventListener('dblclick', () => {
-      td.setAttribute('contenteditable', 'true');
-      td.focus();
-      const range = document.createRange();
-      range.selectNodeContents(td);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-    });
-
-    td.addEventListener('blur', e => {
-      if (td.getAttribute('contenteditable') !== 'true') return;
-      td.setAttribute('contenteditable', 'false');
-
-      const rowOrig = parseInt(e.target.dataset.rowOrig);
-      const colId = e.target.dataset.colId;
-      const col = getColumn(colId);
-      const updatedValue = e.target.textContent;
-      const oldValue = rawRows[rowOrig] ? String(rawRows[rowOrig][colId] ?? '') : '';
-
-      if (updatedValue === oldValue) return;
-
-      pushUndo();
-
-      if (col && col.action !== 'keep') {
-        showToast(`Edited a masked cell in "${col.name}" — column toggled to "Keep as-is".`);
-        col.action = 'keep';
-        buildColumnGrid();
-      }
-
-      if (rawRows[rowOrig]) rawRows[rowOrig][colId] = updatedValue;
-      renderPreview();
-    });
-
-    td.addEventListener('keydown', e => {
-      if (td.getAttribute('contenteditable') === 'true' && e.key === 'Enter') {
-        e.preventDefault();
-        td.blur();
-      }
-    });
-  });
-}
-
-document.addEventListener('keydown', e => {
-  const meta = e.ctrlKey || e.metaKey;
-  const activeIsEditing = document.activeElement && document.activeElement.getAttribute && document.activeElement.getAttribute('contenteditable') === 'true';
-
-  if (meta && e.key.toLowerCase() === 'z' && !e.shiftKey) {
-    if (activeIsEditing) return;
-    e.preventDefault();
-    undo();
-  } else if (meta && (e.key.toLowerCase() === 'y' || (e.key.toLowerCase() === 'z' && e.shiftKey))) {
-    if (activeIsEditing) return;
-    e.preventDefault();
-    redo();
-  } else if (meta && e.key.toLowerCase() === 'c') {
-    if (activeIsEditing || !selAnchor) return;
-    copySelection();
-  } else if (meta && e.key.toLowerCase() === 'v') {
-    if (activeIsEditing || !selAnchor) return;
-    e.preventDefault();
-    pasteAtSelection();
-  } else if (e.key === 'Escape') {
-    selAnchor = null; selEnd = null;
-    applySelectionHighlight();
-  }
-});
-
-function copySelection(){
-  if (!selAnchor || !selEnd) return;
-  const r1 = Math.min(selAnchor.viewRow, selEnd.viewRow), r2 = Math.max(selAnchor.viewRow, selEnd.viewRow);
-  const c1 = Math.min(selAnchor.colIdx, selEnd.colIdx), c2 = Math.max(selAnchor.colIdx, selEnd.colIdx);
-  const lines = [];
-  for (let r = r1; r <= r2; r++) {
-    const rowVals = [];
-    const rowData = currentPreviewRows[r];
-    for (let c = c1; c <= c2; c++) {
-      const col = columns[c];
-      rowVals.push(rowData && col ? String(rowData[col.id] ?? '') : '');
-    }
-    lines.push(rowVals.join('\t'));
-  }
-  const text = lines.join('\n');
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text)
-      .then(() => showToast(`Copied ${(r2 - r1 + 1) * (c2 - c1 + 1)} cell(s).`))
-      .catch(() => showToast('Copy failed — clipboard permission denied.'));
-  } else {
-    showToast('Clipboard access is not available in this browser.');
-  }
-}
-
-async function pasteAtSelection(){
-  if (!selAnchor) return;
-  if (!navigator.clipboard || !navigator.clipboard.readText) {
-    showToast('Clipboard access is not available in this browser.');
-    return;
-  }
-  let text;
-  try {
-    text = await navigator.clipboard.readText();
-  } catch (err) {
-    showToast('Paste failed — clipboard permission denied.');
-    return;
-  }
-  if (!text) return;
-
-  pushUndo();
-
-  const startR = Math.min(selAnchor.viewRow, selEnd ? selEnd.viewRow : selAnchor.viewRow);
-  const startC = Math.min(selAnchor.colIdx, selEnd ? selEnd.colIdx : selAnchor.colIdx);
-  const lines = text.replace(/\r/g, '').split('\n');
-  while (lines.length && lines[lines.length - 1] === '') lines.pop();
-
-  let clamped = false;
-  let touchedCols = new Set();
-
-  lines.forEach((lineText, ri) => {
-    const targetViewRow = startR + ri;
-    if (targetViewRow >= currentPreviewRows.length) { clamped = true; return; }
-    const origIdx = currentPreviewRows[targetViewRow].__idx;
-    const cells = lineText.split('\t');
-    cells.forEach((val, ci) => {
-      const targetColIdx = startC + ci;
-      if (targetColIdx >= columns.length) { clamped = true; return; }
-      const col = columns[targetColIdx];
-      rawRows[origIdx][col.id] = val;
-      if (col.action !== 'keep') touchedCols.add(col.id);
-    });
-  });
-
-  touchedCols.forEach(colId => { const c = getColumn(colId); if (c) c.action = 'keep'; });
-  if (touchedCols.size) buildColumnGrid();
-  renderPreview();
-  showToast(clamped ? 'Pasted (clipped to grid bounds).' : 'Pasted from clipboard.');
-}
-
-/* ---------------- Drag & drop column reorder ---------------- */
-
-function setupDragAndDrop() {
-  const ths = previewTable.querySelectorAll('thead th');
-
-  previewTable.querySelectorAll('.drag-handle').forEach(handle => {
-    handle.addEventListener('dragstart', function(e) {
-      const th = this.closest('th');
-      dragSourceColId = th.dataset.colId;
-      pushUndo();
+  // Setup column drag events safely to fix continuous layout recalculations (trembling)
+  let draggedIdx = null;
+  thead.querySelectorAll('th[draggable]').forEach(th => {
+    th.addEventListener('dragstart', (e) => {
+      draggedIdx = parseInt(th.getAttribute('data-index'));
       th.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', th.dataset.colId);
     });
-    handle.addEventListener('dragend', function() {
-      previewTable.querySelectorAll('thead th').forEach(t => {
-        t.classList.remove('dragging');
-        t.classList.remove('drag-over');
-      });
-      dragSourceColId = null;
-      buildColumnGrid();
+    th.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const targetTh = e.target.closest('th[draggable]');
+      if (!targetTh) return;
+      const targetIdx = window.parseInt(targetTh.getAttribute('data-index'));
+      if (draggedIdx === null || draggedIdx === targetIdx) return; // Prevent continuous flickering on same/adjacent bounds
+      targetTh.classList.add('drag-over');
+    });
+    th.addEventListener('dragleave', (e) => {
+      const targetTh = e.target.closest('th[draggable]');
+      if (targetTh) targetTh.classList.remove('drag-over');
+    });
+    th.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const targetTh = e.target.closest('th[draggable]');
+      if (targetTh) {
+        targetTh.classList.remove('drag-over');
+        const targetIdx = window.parseInt(targetTh.getAttribute('data-index'));
+        if (draggedIdx !== null && draggedIdx !== targetIdx) {
+          const movingCol = columns[draggedIdx];
+          columns.splice(draggedIdx, 1);
+          columns.splice(targetIdx, 0, movingCol);
+          saveState();
+          renderWorkspace();
+        }
+      }
+      draggedIdx = null;
+    });
+    th.addEventListener('dragend', () => th.classList.remove('dragging'));
+  });
+
+  // Handle header names alteration and context rules
+  thead.querySelectorAll('.header-text-span').forEach(span => {
+    span.addEventListener('blur', (e) => {
+      const idx = parseInt(e.target.getAttribute('data-index'));
+      const nextName = e.target.textContent.trim() || `Column_${idx+1}`;
+      if(columns[idx].name !== nextName) {
+        columns[idx].name = nextName;
+        saveState();
+        renderColSettingsGrid();
+      }
+    });
+    span.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
     });
   });
 
-  ths.forEach(th => {
-    th.addEventListener('dragover', function(e) { e.preventDefault(); return false; });
-    th.addEventListener('dragenter', function(e) {
-      const targetColId = this.dataset.colId;
-      if (!targetColId) return;
-      if (dragSourceColId && targetColId !== dragSourceColId) {
-        slideColumnTo(dragSourceColId, targetColId);
+  // Handle sort button click mappings
+  thead.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const idx = parseInt(btn.getAttribute('data-index'));
+      if(currentSort.colIndex === idx) {
+        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSort.colIndex = idx;
+        currentSort.direction = 'asc';
+      }
+      renderLivePreviewTable();
+    });
+  });
+
+  // Handle inline programmatic column insertion
+  thead.querySelectorAll('.col-insert-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const idx = parseInt(btn.getAttribute('data-index'));
+      const generatedId = 'col_inserted_' + Date.now();
+      const newColObj = { id: generatedId, name: `New_Column`, action: 'keep', dataType: 'text' };
+      
+      columns.splice(idx + 1, 0, newColObj);
+      rows.forEach(r => r[generatedId] = '');
+      
+      saveState();
+      renderWorkspace();
+      showToast("Inserted blank new spreadsheet column space layout context.");
+    });
+  });
+
+  // Handle header trash button column removal operation mappings
+  thead.querySelectorAll('.col-trash-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const idx = parseInt(btn.getAttribute('data-index'));
+      const targetCol = columns[idx];
+      const proceed = await showConfirmModal("Purge Data Column Structure?", `Confirm you request to fully delete column: <strong>${escapeHtml(targetCol.name)}</strong>?`);
+      if(proceed) {
+        columns.splice(idx, 1);
+        rows.forEach(r => delete r[targetCol.id]);
+        saveState();
+        renderWorkspace();
+        showToast("Column removed cleanly.");
       }
     });
   });
-}
 
-function slideColumnTo(sourceColId, targetColId) {
-  const fromIndex = columns.findIndex(c => c.id === sourceColId);
-  const toIndex = columns.findIndex(c => c.id === targetColId);
-  if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) return;
+  // Render Table Rows Model Grid Context Data
+  const tbody = document.createElement('tbody');
+  matchedRows.forEach((matchedMeta, viewRowIndex) => {
+    const r = matchedMeta.rowData;
+    const origIndex = matchedMeta.originalIndex;
+    const tr = document.createElement('tr');
 
-  const firstLeft = {};
-  columns.forEach(c => {
-    const th = previewTable.querySelector(`thead th[data-col-id="${c.id}"]`);
-    if (th) firstLeft[c.id] = th.getBoundingClientRect().left;
+    const gutterTd = document.createElement('td');
+    gutterTd.className = 'row-gutter';
+    gutterTd.innerHTML = `
+      <span class="row-num">${origIndex + 1}</span>
+      <button class="row-del-btn" data-orig-idx="${origIndex}" title="Delete Row Profile Asset.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </button>
+    `;
+    tr.appendChild(gutterTd);
+
+    columns.forEach((c) => {
+      const td = document.createElement('td');
+      const processedVal = getProcessedValue(c, r[c.id], origIndex, anonymizationCache);
+      
+      td.textContent = processedVal;
+      td.setAttribute('data-col-id', c.id);
+      td.setAttribute('data-orig-row-idx', origIndex);
+
+      if (c.action === 'redact') td.className = 'cell-redact';
+      else if (c.action === 'shuffle') td.className = 'cell-shuffle';
+      else if (c.action === 'anonymize') td.className = 'cell-anon';
+
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
   });
 
-  moveColumn(fromIndex, toIndex);
-  renderPreview();
+  // Add functional ghost row insertion hook triggers
+  const ghostTr = document.createElement('tr');
+  ghostTr.className = 'add-row-ghost';
+  const totalGridWidth = columns.length + 1;
+  ghostTr.innerHTML = `
+    <td colspan="${totalGridWidth}">
+      <div class="add-row-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Add record line item row row...
+      </div>
+    </td>
+  `;
+  ghostTr.addEventListener('click', () => {
+    const freshRow = {};
+    columns.forEach(c => freshRow[c.id] = '');
+    rows.push(freshRow);
+    saveState();
+    renderWorkspace();
+    showToast("Appended new row record line slot.");
+  });
+  tbody.appendChild(ghostTr);
 
-  columns.forEach(c => {
-    const th = previewTable.querySelector(`thead th[data-col-id="${c.id}"]`);
-    if (!th || firstLeft[c.id] === undefined) return;
-    const lastLeft = th.getBoundingClientRect().left;
-    const delta = firstLeft[c.id] - lastLeft;
-    if (Math.abs(delta) < 0.5) return;
+  previewTable.appendChild(tbody);
 
-    const cells = previewTable.querySelectorAll(`[data-col-id="${c.id}"]`);
-    cells.forEach(cell => {
-      cell.style.transition = 'none';
-      cell.style.transform = `translateX(${delta}px)`;
+  // Setup range grid dynamic selection models interaction handles
+  tbody.querySelectorAll('td:not(.row-gutter)').forEach(cell => {
+    cell.addEventListener('mousedown', (e) => {
+      if(e.target.getAttribute('contenteditable') === 'true') return;
+      e.preventDefault();
+      selectStartCell = {
+        id: cell.getAttribute('data-col-id'),
+        rowIdx: parseInt(cell.getAttribute('data-orig-row-idx'))
+      };
+      clearGridSelections();
+      cell.classList.add('cell-selected');
     });
-    void th.offsetWidth;
-    cells.forEach(cell => {
-      cell.style.transition = 'transform 200ms cubic-bezier(.22,.9,.32,1)';
-      cell.style.transform = '';
+
+    cell.addEventListener('mouseenter', (e) => {
+      if (!selectStartCell) return;
+      const currId = cell.getAttribute('data-col-id');
+      const currRowIdx = parseInt(cell.getAttribute('data-orig-row-idx'));
+      
+      const startColIndex = columns.findIndex(c => c.id === selectStartCell.id);
+      const endColIndex = columns.findIndex(c => c.id === currId);
+      
+      const rStart = Math.min(selectStartCell.rowIdx, currRowIdx);
+      const rEnd = Math.max(selectStartCell.rowIdx, currRowIdx);
+      const cStart = Math.min(startColIndex, endColIndex);
+      const cEnd = Math.max(startColIndex, endColIndex);
+
+      clearGridSelections();
+      selectedCellsRange = { rStart, rEnd, cStart, cEnd };
+
+      for (let rIdx = rStart; rIdx <= rEnd; rIdx++) {
+        for (let cIdx = cStart; cIdx <= cEnd; cIdx++) {
+          const colIdentifier = columns[cIdx].id;
+          const targetDomNode = tbody.querySelector(`td[data-col-id="${colIdentifier}"][data-orig-row-idx="${rIdx}"]`);
+          if (targetDomNode) targetDomNode.classList.add('cell-selected');
+        }
+      }
     });
-    cells.forEach(cell => {
-      cell.addEventListener('transitionend', () => { cell.style.transition = ''; }, { once: true });
+
+    cell.addEventListener('dblclick', () => {
+      cell.setAttribute('contenteditable', 'true');
+      cell.focus();
+      // Ensure selection rules are temporarily disabled during text edits
+      clearGridSelections();
+    });
+
+    cell.addEventListener('blur', () => {
+      cell.removeAttribute('contenteditable');
+      const cId = cell.getAttribute('data-col-id');
+      const rIdx = parseInt(cell.getAttribute('data-orig-row-idx'));
+      const textVal = cell.textContent;
+      if(rows[rIdx] && rows[rIdx][cId] !== textVal) {
+        rows[rIdx][cId] = textVal;
+        saveState();
+        renderColSettingsGrid();
+      }
+    });
+
+    cell.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' && cell.getAttribute('contenteditable') === 'true') {
+        e.preventDefault();
+        cell.blur();
+      }
     });
   });
+
+  // Wire row explicit delete modal asset handles safely inside the matrix bounds directly
+  tbody.querySelectorAll('.row-del-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const targetIndex = parseInt(btn.getAttribute('data-orig-idx'));
+      const verified = await showConfirmModal("Eject Data Row Line Item?", `Confirm row reference removal slot validation index mapping: <strong>${targetIndex + 1}</strong>?`);
+      if(verified) {
+        rows.splice(targetIndex, 1);
+        saveState();
+        renderWorkspace();
+        showToast("Row purged cleanly.");
+      }
+    });
+  });
+
+  if (query) {
+    searchMatchCount.textContent = `Found ${matchedRows.length} matches across search bounds.`;
+    searchClearBtn.classList.add('show');
+  } else {
+    searchMatchCount.textContent = '';
+    searchClearBtn.classList.remove('show');
+  }
 }
 
-function moveColumn(fromIndex, toIndex) {
-  const col = columns.splice(fromIndex, 1)[0];
-  const adjustedTo = fromIndex < toIndex ? toIndex - 1 : toIndex;
-  columns.splice(adjustedTo, 0, col);
+function clearGridSelections() {
+  previewTable.querySelectorAll('tbody td.cell-selected').forEach(c => c.classList.remove('cell-selected'));
+  selectedCellsRange = null;
 }
 
-/* ---------------- Row / column mutation ---------------- */
+window.addEventListener('mouseup', () => { selectStartCell = null; });
 
-function deleteSpecificColumn(colId) {
-  if (columns.length <= 1) return;
-  const idx = columns.findIndex(c => c.id === colId);
-  if (idx === -1) return;
-  pushUndo();
-  columns.splice(idx, 1);
-  rawRows.forEach(row => { delete row[colId]; });
-  delete sessionShuffledIndices[colId];
-  if (sortState.colId === colId) sortState = { colId: null, dir: null };
-
-  buildColumnGrid();
-  renderPreview();
-}
-
-function gridInsertColumnAt(targetIndex) {
-  const existingNames = new Set(columns.map(c => c.name));
-  let finalColName = 'id';
-  let counter = 1;
-  while (existingNames.has(finalColName)) {
-    finalColName = `id_${counter}`;
-    counter++;
+// Copy/Paste Context Engine Hooks Frameworks
+window.addEventListener('keydown', (e) => {
+  const activeNode = document.activeElement;
+  if (activeNode && activeNode.tagName === 'INPUT' || activeNode.getAttribute('contenteditable') === 'true') {
+    return; // Pass control seamlessly
   }
 
-  pushUndo();
-  const newId = nextColId();
-  columns.splice(targetIndex, 0, { id: newId, name: finalColName, type: 'generic', action: 'keep', format: 'text' });
-  rawRows.forEach((row, rowIndex) => { row[newId] = `Id_${rowIndex + 1}`; });
-
-  buildColumnGrid();
-  renderPreview();
-}
-
-function gridAddRow() {
-  pushUndo();
-  if (columns.length === 0) {
-    const newId = nextColId();
-    columns.push({ id: newId, name: 'id', type: 'generic', action: 'keep', format: 'text' });
+  // Handle undo/redo shortcuts explicitly inside active frame maps safely
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+    e.preventDefault();
+    undoBtn.click();
+    return;
   }
-  const newEmptyRow = {};
-  columns.forEach(col => {
-    newEmptyRow[col.id] = col.name.toLowerCase().startsWith('id') ? `Id ${rawRows.length + 1}` : '';
-  });
-  rawRows.push(newEmptyRow);
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+    e.preventDefault();
+    redoBtn.click();
+    return;
+  }
 
-  updateRowCountsUI();
-  renderPreview();
-}
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
+    if (!selectedCellsRange) return;
+    e.preventDefault();
+    let rowsTextLines = [];
+    for (let r = selectedCellsRange.rStart; r <= selectedCellsRange.rEnd; r++) {
+      let cellsValues = [];
+      for (let c = selectedCellsRange.cStart; c <= selectedCellsRange.cEnd; c++) {
+        cellsValues.push(rows[r][columns[c].id] || '');
+      }
+      rowsTextLines.push(cellsValues.join('\t'));
+    }
+    const copyBlockPayloadStr = rowsTextLines.join('\n');
+    navigator.clipboard.writeText(copyBlockPayloadStr).then(() => {
+      showToast(`Copied range blocks data parameters safely to internal system clipboard.`);
+    });
+  }
 
-function deleteRowAt(rowIndex) {
-  if (rowIndex < 0 || rowIndex >= rawRows.length) return;
-  pushUndo();
-  rawRows.splice(rowIndex, 1);
-  selAnchor = null; selEnd = null;
-  updateRowCountsUI();
-  renderPreview();
-}
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') {
+    if (!selectedCellsRange) return;
+    e.preventDefault();
+    navigator.clipboard.readText().then(clipText => {
+      if(!clipText) return;
+      const lines = clipText.split(/\r?\n/).map(l => l.split('\t'));
+      let alteredState = false;
 
-resetBtn.addEventListener('click', () => {
-  pushUndo();
-  columns.forEach(col => { col.action = TYPE_ACTION[col.type]; });
-  sessionShuffledIndices = {};
-  buildColumnGrid();
-  renderPreview();
+      lines.forEach((line, lineOffset) => {
+        const targetRowIndex = selectedCellsRange.rStart + lineOffset;
+        if (targetRowIndex >= rows.length) return;
+
+        line.forEach((valStr, colOffset) => {
+          const targetColUIIdx = selectedCellsRange.cStart + colOffset;
+          if (targetColUIIdx >= columns.length) return;
+
+          const colKeyId = columns[targetColUIIdx].id;
+          if (rows[targetRowIndex][colKeyId] !== valStr) {
+            rows[targetRowIndex][colKeyId] = valStr;
+            alteredState = true;
+          }
+        });
+      });
+
+      if (alteredState) {
+        saveState();
+        renderWorkspace();
+        showToast("Injected clipboard block selection matrix details safely.");
+      }
+    });
+  }
 });
 
-clearFileBtn.addEventListener('click', () => {
-  rawRows = [];
-  columns = [];
-  sessionShuffledIndices = {};
-  colIdCounter = 0;
-  undoStack = [];
-  redoStack = [];
-  sortState = { colId: null, dir: null };
-  searchQuery = '';
-  selAnchor = null; selEnd = null;
-  fileInput.value = '';
+// Search functionality updates
+let debounceTimer;
+searchInput.addEventListener('input', () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    renderLivePreviewTable();
+  }, 150);
+});
+
+searchClearBtn.addEventListener('click', () => {
   searchInput.value = '';
-  searchClearBtn.classList.remove('show');
-  updateUndoRedoButtons();
-  workspace.classList.add('hidden');
-  dropzone.classList.remove('hidden');
-  statusEyebrow.textContent = '/ Client-Side';
+  renderLivePreviewTable();
 });
 
-/* ---------------- Multi-format export ---------------- */
-
+// Download compilation pipeline logic
 downloadBtn.addEventListener('click', () => {
-  if (!rawRows.length) return;
-
-  const targetFormat = formatSelect.value;
-  downloadBtn.textContent = 'Processing…';
+  downloadBtn.textContent = 'Processing...';
   downloadBtn.disabled = true;
 
   setTimeout(async () => {
     try {
-      const sanitized = buildSanitizedRows();
-
-      const exportRows = sanitized.map(row => {
+      const format = document.getElementById('formatSelect').value;
+      const anonymizationCache = {};
+      
+      const exportRows = rows.map((r, rIdx) => {
         const out = {};
-        columns.forEach(col => { out[col.name] = row[col.id]; });
+        columns.forEach(c => {
+          out[c.name] = getProcessedValue(c, r[c.id], rIdx, anonymizationCache);
+        });
         return out;
       });
 
       let blob, ext;
-
-      switch(targetFormat) {
+      switch (format) {
         case 'csv':
-          const csvStr = Papa.unparse(exportRows, { columns: columns.map(c => c.name) });
-          blob = new Blob([csvStr], { type: 'text/csv;charset=utf-8;' });
+          const unparsedCsv = Papa.unparse(exportRows, { header: true });
+          blob = new Blob([unparsedCsv], { type: 'text/csv;charset=utf-8;' });
           ext = 'csv';
           break;
-
-        case 'xlsx':
-          const wb = XLSX.utils.book_new();
-          const ws = XLSX.utils.json_to_sheet(exportRows, { header: columns.map(c => c.name) });
-          XLSX.utils.book_append_sheet(wb, ws, "Sanitized Data");
-          const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-          blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-          ext = 'xlsx';
-          break;
-
         case 'json':
-          const jsonStr = JSON.stringify(exportRows, null, 2);
-          blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+          blob = new Blob([JSON.stringify(exportRows, null, 2)], { type: 'application/json' });
           ext = 'json';
           break;
-
+        case 'xlsx':
+          const sheet = XLSX.utils.json_to_sheet(exportRows);
+          const book = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(book, sheet, "Sanitized Data");
+          const outBuffer = XLSX.write(book, { bookType: 'xlsx', type: 'array' });
+          blob = new Blob([outBuffer], { type: 'application/octet-stream' });
+          ext = 'xlsx';
+          break;
         case 'sql':
-          const tableName = "sanitized_records";
-          let sqlStr = `-- Exported Clean Data\n`;
-          exportRows.forEach(row => {
-            const keys = columns.map(c => `\`${c.name}\``).join(', ');
-            const values = columns.map(c => {
-              const val = row[c.name];
-              if (val === null || val === undefined) return 'NULL';
-              return `'${String(val).replace(/'/g, "''")}'`;
+          let sqlLines = exportRows.map(rowObj => {
+            const keys = Object.keys(rowObj).map(k => `\`${k}\``).join(', ');
+            const vals = Object.values(rowObj).map(v => {
+              if (v === null || v === undefined) return 'NULL';
+              return `'${String(v).replace(/'/g, "''")}'`;
             }).join(', ');
-            sqlStr += `INSERT INTO ${tableName} (${keys}) VALUES (${values});\n`;
+            return `INSERT INTO \`${originalFileNameBase}\` (${keys}) VALUES (${vals});`;
           });
-          blob = new Blob([sqlStr], { type: 'text/plain;charset=utf-8;' });
+          blob = new Blob([sqlLines.join('\n')], { type: 'text/plain' });
           ext = 'sql';
           break;
-
         case 'parquet':
-          if (typeof parquet === 'undefined') {
-            throw new Error("Parquet engine compilation deferred. Try again or check network accessibility.");
-          }
-          const parquetSchemaFields = {};
-          columns.forEach(c => {
-            parquetSchemaFields[c.name] = { type: 'UTF8' };
-          });
-          const schema = new parquet.ParquetSchema(parquetSchemaFields);
-
-          const buffers = [];
-          const writer = await parquet.ParquetWriter.openStream(schema, {
-            write: (buf) => buffers.push(buf),
-            end: () => {}
-          });
-
-          for (const row of exportRows) {
-            await writer.appendRow(row);
-          }
-          await writer.close();
-
-          blob = new Blob(buffers, { type: 'application/octet-stream' });
-          ext = 'parquet';
+          showToast(".PARQUET client compiling context dependencies required.");
+          blob = null;
           break;
       }
 
